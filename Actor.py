@@ -3,18 +3,14 @@ import pygame
 
 
 class Actor:
-    def __init__(self, pos, size):
+    def __init__(self, pos, size, spritesheet):
         self.bounds = Rect(pos, size)
         self.velocity = 10
         self.size = size
+        self.spritesheet = spritesheet
 
-    def drawActor(self, image, screen, coord):
-        screen.blit(image, coord)
-
-    def transform(self, image, width, height):  # nu mergeee!!!
-        pygame.transform.scale(image, (width, height))
-        return image
-
+    def drawActor(self, screen, coord):
+        screen.blit(self.spritesheet.sheet, coord)
 
     def position(self, pos):
         self.bounds.topleft = pos

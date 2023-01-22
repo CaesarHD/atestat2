@@ -1,14 +1,14 @@
 import pygame
 from pygame import Rect
 
+from Actor import Actor
 from Spritesheet import Spritesheet
 
 
-class Player:
-    def __init__(self, pos, size, spritesheetImg):
-        self.bounds = Rect(pos, size)
-        self.spritesheetImg = spritesheetImg
-        self.spritesheet = Spritesheet(spritesheetImg)
+class Player(Actor):
+    def __init__(self, pos, size, spritesheet):
+        super().__init__(pos, size, spritesheet)
+
         self.animationList = []
         self.animationSteps = [4, 4, 5, 1, 6]
         self.action = 1
