@@ -4,13 +4,14 @@ from Actor import Actor
 
 
 class Background(Actor):
-    def __init__(self, pos, size, spritesheet):
-        super().__init__(pos, size, spritesheet)
+    def __init__(self, pos, size, spritesheet, animationSteps, frameWidth, frameHeight):
+        super().__init__(pos, size, spritesheet, animationSteps, frameWidth, frameHeight)
+        self.pos = pos
 
     def transform(self, size):
         self.spritesheet.sheet = pygame.transform.scale(self.spritesheet.sheet, size)
 
-    def drawActor(self, screen, coord):
+    def drawActor(self, screen):
         self.spritesheet.sheet = pygame.transform.scale(self.spritesheet.sheet, self.size)
-        screen.blit(self.spritesheet.sheet, coord)
+        screen.blit(self.spritesheet.sheet, self.pos)
 
