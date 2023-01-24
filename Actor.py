@@ -5,11 +5,12 @@ import pygame
 class Actor:
     def __init__(self, pos, size, spritesheet, animationSteps, frameWidth, frameHeight):
         self.bounds = Rect(pos, size)
-        self.velocity = 10
+        self.velocity = 7
         self.size = size
         self.spritesheet = spritesheet
         self.pos = pos
-
+        self.isJumping = False
+        self.isFalling = False
         self.animationList = []
         self.animationSteps = animationSteps
         self.action = 4
@@ -56,12 +57,18 @@ class Actor:
 
     def moveUp(self):
         initial = self.bounds.topleft
-        self.bounds.topleft = (initial[0], initial[1] - (self.velocity))
+        self.bounds.topleft = (initial[0], initial[1] - self.velocity)
 
 
     def moveDown(self):
         initial = self.bounds.topleft
         self.bounds.topleft = (initial[0], initial[1] + self.velocity)
 
-
+    def jump(self, initialPos):
+        if self.isJumping and not self.isFalling:
+            self.moveUp()
+            currentPos = self.bounds.topleft[1]
+            print(currentPos)
+            if initialPos - currentPos > 150:
+                self.isJumping = False
 
