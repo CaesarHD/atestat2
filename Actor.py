@@ -1,29 +1,41 @@
 from pygame import Rect
 import pygame
 
+from Spritesheet import Spritesheet
+
 
 class Actor:
     def __init__(self, pos, size, spritesheet, animationSteps, frameWidth, frameHeight):
         self.bounds = Rect(pos, size)
         self.velocity = 7
+        self.gravityForce = 10
         self.size = size
+        self.frameWidth = frameWidth
+        self.frameHeight = frameHeight
         self.spritesheet = spritesheet
         self.pos = pos
         self.isJumping = False
         self.isFalling = False
+        self.isArmed = False
+        self.isIdle = True
+        self.isShooting = False
+        self.isRight = True
+        self.isLeft = False
         self.animationList = []
+        self.animationListFlip = 0
         self.animationSteps = animationSteps
-        self.action = 4
+        self.action = 0
         self.animationCooldown = 120
         self.frame = 0
         self.stepCounter = 0
 
-        black = (0, 0, 0)
+
+        self.black = (0, 0, 0)
 
         for animation in self.animationSteps:
             tempImageList = []
             for _ in range(animation):
-                tempImageList.append(self.spritesheet.getImage(self.stepCounter, frameWidth, frameHeight, self.size[0], black))
+                tempImageList.append(self.spritesheet.getImage(self.stepCounter, self.frameWidth, self.frameHeight, self.size[0], self.black))
                 self.stepCounter += 1
             self.animationList.append(tempImageList)
 
@@ -33,7 +45,12 @@ class Actor:
             self.frame = 0
 
     def drawActor(self, screen):
-        screen.blit(self.animationList[self.action][self.frame], self.bounds)
+        if self.isRight:
+            screen.blit(self.animationList[self.action][self.frame], self.bounds)
+        else:
+            self.animationListFlip = pygame.transform.flip(self.animationList[self.action][self.frame], True, False)
+            self.animationListFlip.set_colorkey(self.black)
+            screen.blit(self.animationListFlip, self.bounds)
 
     def position(self, pos):
         self.bounds.topleft = pos
@@ -65,10 +82,16 @@ class Actor:
         self.bounds.topleft = (initial[0], initial[1] + self.velocity)
 
     def jump(self, initialPos):
-        if self.isJumping and not self.isFalling:
-            self.moveUp()
-            currentPos = self.bounds.topleft[1]
-            print(currentPos)
-            if initialPos - currentPos > 150:
-                self.isJumping = False
+        self.moveUp()
+        currentPos = self.bounds.topleft[1]
+        if initialPos - currentPos > 150:
+            self.isJumping = False
 
+    def fall(self):
+        if self.isFalling:
+            if self.isArmed:
+                self.action = 5
+            else:
+                self.action = 2
+            self.frame = 0
+            self.moveDown()
