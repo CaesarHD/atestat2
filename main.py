@@ -38,7 +38,7 @@ def main():
 
     running = True
 
-    player.action = 2
+    player.action = 3
 
     while running:
 
