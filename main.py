@@ -19,16 +19,18 @@ def main():
 
     screen = Screen(800, 600)
     playerResource = pygame.image.load('E:\\atestat\\pythonProject1\\Images\\ALIEN_FRAMES\\spritesheet.png')
-    playerSpritesheet = Spritesheet(playerResource)
-    player = Player((0, 100), (2, 2), playerSpritesheet, [4, 6, 4, 4, 6, 4, 3, 6, 5], 57, 57)
+    playerSpritesheet = Spritesheet(playerResource, 57, 57)
+    player = Player((0, 100), (2, 2), playerSpritesheet, [4, 6, 4, 4, 6, 4, 3, 6, 5], 2)
 
     backgroundResource = pygame.image.load('E:\\atestat\\pythonProject1\\Images\\ImaginiInternet\\background.webp')
-    backgrounSpritesheet = Spritesheet(backgroundResource)
-    background = Background((0, 0), (screen.screenWidth, screen.screenHeight), backgrounSpritesheet, [1], 1, 1)
+    backgrounSpritesheet = Spritesheet(backgroundResource, 3840, 2304)
+    background = Background((0, 0), (screen.screenWidth, screen.screenHeight), backgrounSpritesheet, [1], 1)
 
     playerShipResource = pygame.image.load('E:\\atestat\\pythonProject1\\Images\\Alien_Ship\\spritesheet.png')
-    playerShipSpritesheet = Spritesheet(playerShipResource)
-    playerShip = Actor((0, 0), (1.5, 1.5), playerShipSpritesheet, [1, 1, 1], 440, 440)
+    playerShipSpritesheet = Spritesheet(playerShipResource, 440, 440)
+    playerShip = Actor((0, 0), (1.5, 1.5), playerShipSpritesheet, [1, 1, 1], 1.5)
+
+
     playerShip.action = 2
 
     lastUpdate = pygame.time.get_ticks()
@@ -45,8 +47,7 @@ def main():
         clock.tick(60)
 
         background.drawActor(screen)
-        # playerShip.drawActor(screen)
-        screen.blit(playerShipResource, (0, 0))
+        playerShip.drawActor(screen)
 
         currentTime = pygame.time.get_ticks()
         if currentTime - lastUpdate > player.animationCooldown:

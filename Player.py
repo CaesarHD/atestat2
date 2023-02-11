@@ -6,8 +6,8 @@ from Spritesheet import Spritesheet
 
 
 class Player(Actor):
-    def __init__(self, pos, size, spritesheet, animationSteps, frameWidth, frameHeight):
-        super().__init__(pos, size, spritesheet, animationSteps, frameWidth, frameHeight)
+    def __init__(self, pos, size, spritesheet, animationSteps, scale):
+        super().__init__(pos, size, spritesheet, animationSteps, scale)
 
     def fall(self):
 

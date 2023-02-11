@@ -5,15 +5,14 @@ from Spritesheet import Spritesheet
 
 
 class Actor:
-    def __init__(self, pos, size, spritesheet, animationSteps, frameWidth, frameHeight):
+    def __init__(self, pos, size, spritesheet, animationSteps, scale):
         self.bounds = Rect(pos, size)
         self.velocity = 7
         self.gravityForce = 10
         self.size = size
-        self.frameWidth = frameWidth
-        self.frameHeight = frameHeight
         self.spritesheet = spritesheet
         self.pos = pos
+        self.scale = scale
         self.isJumping = False
         self.isFalling = False
         self.isArmed = False
@@ -30,12 +29,10 @@ class Actor:
         self.stepCounter = 0
 
 
-        self.black = (0, 0, 0)
-
         for animation in self.animationSteps:
             tempImageList = []
             for _ in range(animation):
-                tempImageList.append(self.spritesheet.getImage(self.stepCounter, self.frameWidth, self.frameHeight, self.size[0], self.black))
+                tempImageList.append(self.spritesheet.getImageByIndex(self.stepCounter, self.scale))
                 self.stepCounter += 1
             self.animationList.append(tempImageList)
 
@@ -49,7 +46,6 @@ class Actor:
             screen.blit(self.animationList[self.action][self.frame], self.bounds)
         else:
             self.animationListFlip = pygame.transform.flip(self.animationList[self.action][self.frame], True, False)
-            self.animationListFlip.set_colorkey(self.black)
             screen.blit(self.animationListFlip, self.bounds)
 
     def position(self, pos):
