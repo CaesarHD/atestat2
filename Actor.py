@@ -1,23 +1,19 @@
 from pygame import Rect
 import pygame
 
-from Spritesheet import Spritesheet
-
+GFORCE = 2
 
 class Actor:
     def __init__(self, pos, size, spritesheet, animationSteps, scale):
         self.bounds = Rect(pos, size)
         self.velocity = 7
-        self.gravityForce = 10
+        self.gravityForce = GFORCE
         self.size = size
         self.spritesheet = spritesheet
         self.pos = pos
         self.scale = scale
-        self.isJumping = False
         self.isFalling = False
-        self.isArmed = False
         self.isIdle = True
-        self.isShooting = False
         self.isRight = True
         self.isLeft = False
         self.animationList = []
@@ -38,10 +34,17 @@ class Actor:
 
     def tickAnimation(self):
         self.frame += 1
+        self.resetAnimation()
+
+    def resetAnimation(self):
+        print(self.frame)
+        print(self.animationList[self.action])
         if self.frame >= len(self.animationList[self.action]):
             self.frame = 0
 
     def drawActor(self, screen):
+        self.resetAnimation()
+
         if self.isRight:
             screen.blit(self.animationList[self.action][self.frame], self.bounds)
         else:
@@ -63,7 +66,6 @@ class Actor:
         initial = self.bounds.topleft
         self.bounds.topleft = (initial[0] + self.velocity, initial[1])
 
-
     def moveLeft(self):
         initial = self.bounds.topleft
         self.bounds.topleft = (initial[0] - self.velocity, initial[1])
@@ -72,22 +74,6 @@ class Actor:
         initial = self.bounds.topleft
         self.bounds.topleft = (initial[0], initial[1] - self.velocity)
 
-
     def moveDown(self):
         initial = self.bounds.topleft
         self.bounds.topleft = (initial[0], initial[1] + self.velocity)
-
-    def jump(self, initialPos):
-        self.moveUp()
-        currentPos = self.bounds.topleft[1]
-        if initialPos - currentPos > 150:
-            self.isJumping = False
-
-    def fall(self):
-        if self.isFalling:
-            if self.isArmed:
-                self.action = 5
-            else:
-                self.action = 2
-            self.frame = 0
-            self.moveDown()
