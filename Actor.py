@@ -4,8 +4,9 @@ import pygame
 GFORCE = 2
 
 class Actor:
-    def __init__(self, pos, size, scale, resource):
-        self.bounds = Rect(pos, size)
+
+    def __init__(self, pos, scale, resource):
+        self.bounds = Rect(pos, resource.size)
         self.velocity = 7
         self.gravityForce = GFORCE
         self.spritesheet = resource.spritesheet

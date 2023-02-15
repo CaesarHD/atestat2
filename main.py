@@ -20,7 +20,7 @@ def main():
 
     clock = pygame.time.Clock()
 
-    screen = Screen(800, 600)
+    screen = Screen(800*1.2, 480*1.2)
     # playerResource = pygame.image.load('E:\\atestat\\pythonProject1\\Images\\ALIEN_FRAMES\\spritesheet.png')
     # backgroundResource = pygame.image.load('E:\\atestat\\pythonProject1\\Images\\ImaginiInternet\\background.webp')
     # playerShipResource = pygame.image.load('E:\\atestat\\pythonProject1\\Images\\Alien_Ship\\spritesheet.png')
@@ -33,10 +33,10 @@ def main():
     resourceProvider.registerResource("background", '/home/pdanny/work/atestat2/Images/ImaginiInternet/background.webp', [1], (3840, 2304))
     resourceProvider.registerResource("playerShip", '/home/pdanny/work/atestat2/Images/Alien_Ship/spritesheet.png', [1, 1, 1, 1], (440, 440))
 
-    player = Character((0, 100), (5, 5), 2, resourceProvider.getResource("player"))
-    background = Background((0, 0), (screen.screenWidth, screen.screenHeight), 1, resourceProvider.getResource("background"))
-    playerShip = Actor((0, 0), (1.5, 1.5), 1.5, resourceProvider.getResource("playerShip"))
-    enemy = Enemy((400, 100), (2, 2),  2, resourceProvider.getResource("rubinEnemy"))
+    player = Character((0, 100), 2, resourceProvider.getResource("player"))
+    background = Background((0, 0), 0.25, resourceProvider.getResource("background"))
+    playerShip = Actor((0, 0), 1.5, resourceProvider.getResource("playerShip"))
+    enemy = Enemy((400, 100), 2, resourceProvider.getResource("rubinEnemy"))
 
     playerShip.action = 2
 

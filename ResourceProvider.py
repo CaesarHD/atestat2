@@ -12,7 +12,7 @@ class ResourceProvider:
         imageResource = pygame.image.load(path)
         spriteSheet = Spritesheet(imageResource, size[0], size[1])
 
-        self.__cache[name] = Resource(spriteSheet, animationFrames)
+        self.__cache[name] = Resource(spriteSheet, animationFrames, size)
 
     def getResource(self, name):
         return self.__cache[name]

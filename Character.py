@@ -10,9 +10,8 @@ GFORCE = 10
 
 class Character(Actor):
 
-
-    def __init__(self, pos, size, scale, resource):
-        super().__init__(pos, size, scale, resource)
+    def __init__(self, pos, scale, resource):
+        super().__init__(pos, scale, resource)
         self.preJumpPosition = GROUND
         self.isShooting = False
         self.isJumping = False

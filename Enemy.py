@@ -5,8 +5,8 @@ GFORCE = 10
 
 
 class Enemy(Character):
-    def __init__(self, pos, size, scale, resource):
-        super().__init__(pos, size, scale, resource)
+    def __init__(self, pos, scale, resource):
+        super().__init__(pos, scale, resource)
         self.isShooting = False
         self.isJumping = False
         self.isArmed = False
