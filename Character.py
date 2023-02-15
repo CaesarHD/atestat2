@@ -8,11 +8,11 @@ GROUND = 430
 JUMP_HEIGHT = 150
 GFORCE = 10
 
-class Player(Actor):
+class Character(Actor):
 
 
-    def __init__(self, pos, size, spritesheet, animationSteps, scale):
-        super().__init__(pos, size, spritesheet, animationSteps, scale)
+    def __init__(self, pos, size, scale, resource):
+        super().__init__(pos, size, scale, resource)
         self.preJumpPosition = GROUND
         self.isShooting = False
         self.isJumping = False

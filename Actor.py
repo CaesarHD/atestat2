@@ -4,13 +4,11 @@ import pygame
 GFORCE = 2
 
 class Actor:
-    def __init__(self, pos, size, spritesheet, animationSteps, scale):
+    def __init__(self, pos, size, scale, resource):
         self.bounds = Rect(pos, size)
         self.velocity = 7
         self.gravityForce = GFORCE
-        self.size = size
-        self.spritesheet = spritesheet
-        self.pos = pos
+        self.spritesheet = resource.spritesheet
         self.scale = scale
         self.isFalling = False
         self.isIdle = True
@@ -18,12 +16,11 @@ class Actor:
         self.isLeft = False
         self.animationList = []
         self.animationListFlip = 0
-        self.animationSteps = animationSteps
+        self.animationSteps = resource.animationFrames
         self.action = 0
         self.animationCooldown = 120
         self.frame = 0
         self.stepCounter = 0
-
 
         for animation in self.animationSteps:
             tempImageList = []
@@ -37,8 +34,8 @@ class Actor:
         self.resetAnimation()
 
     def resetAnimation(self):
-        print(self.frame)
-        print(self.animationList[self.action])
+        # print(self.frame)
+        # print(self.animationList[self.action])
         if self.frame >= len(self.animationList[self.action]):
             self.frame = 0
 

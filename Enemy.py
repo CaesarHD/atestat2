@@ -1,11 +1,12 @@
-from Player import Player
+from Character import Character
 
 GROUND = 430
 GFORCE = 10
-class Enemy(Player):
-    def __init__(self, pos, size, spritesheet, animationSteps, scale):
-        super().__init__(pos, size, spritesheet, animationSteps, scale)
 
+
+class Enemy(Character):
+    def __init__(self, pos, size, scale, resource):
+        super().__init__(pos, size, scale, resource)
         self.isShooting = False
         self.isJumping = False
         self.isArmed = False
@@ -19,7 +20,6 @@ class Enemy(Player):
         # self.action = 0
         self.gravityForce += 1.5
         self.moveDown()
-
 
     def inIdle(self):
         if not self.isFalling and not self.isJumping:
@@ -63,9 +63,9 @@ class Enemy(Player):
             if self.frame == 2:
                 self.isShooting = False
         else:
-             self.action = 3
-             if self.frame == 3:
-                 self.isShooting = False
+            self.action = 3
+            if self.frame == 3:
+                self.isShooting = False
 
     def moving(self):
 
