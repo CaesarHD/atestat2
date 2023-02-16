@@ -8,6 +8,7 @@ from Character import Character
 from ResourceProvider import ResourceProvider
 from Screen import Screen
 from Spritesheet import Spritesheet
+from Actions import Actions
 
 
 # Press Shift+F10 to execute it or replace it with your code.
@@ -27,11 +28,12 @@ def main():
     # enemyResource = pygame.image.load('E:\\atestat\\pythonProject1\\Images\\ENEMY_FRAMES\\spritesheet.png')
 
     resourceProvider = ResourceProvider()
-    resourceProvider.registerResource("rubinEnemy", '/home/pdanny/work/atestat2/Images/ENEMY_FRAMES/spritesheet.png', [6, 4, 3, 4], (57, 57))
-    resourceProvider.registerResource("cyanEnemy", '/home/pdanny/work/atestat2/Images/ENEMY_FRAMES/spritesheet.png', [6, 4, 3, 4], (57, 57))
-    resourceProvider.registerResource("player", '/home/pdanny/work/atestat2/Images/ALIEN_FRAMES/spritesheet.png', [4, 6, 3, 1, 2, 4, 6, 3, 1, 2, 3, 6, 2, 3], (57, 57))
-    resourceProvider.registerResource("background", '/home/pdanny/work/atestat2/Images/ImaginiInternet/background.webp', [1], (3840, 2304))
-    resourceProvider.registerResource("playerShip", '/home/pdanny/work/atestat2/Images/Alien_Ship/spritesheet.png', [1, 1, 1, 1], (440, 440))
+    action = Actions()
+
+    resourceProvider.registerResource("rubinEnemy", 'Images\ENEMY_FRAMES\spritesheet.png', [6, 4, 3, 4], (57, 57), action.getActions("rubinEnemy"))
+    resourceProvider.registerResource("player", 'Images\ALIEN_FRAMES\spritesheet.png', [4, 6, 3, 1, 2, 4, 6, 3, 1, 2, 3, 6, 2, 3], (57, 57), action.getActions("player"))
+    resourceProvider.registerResource("background", 'Images\ImaginiInternet\\background.webp', [1], (3840, 2304), None)
+    resourceProvider.registerResource("playerShip", 'Images\Alien_Ship\spritesheet.png', [1, 1, 1, 1], (440, 440), action.getActions("playerShip"))
 
     player = Character((0, 100), 2, resourceProvider.getResource("player"))
     background = Background((0, 0), 0.25, resourceProvider.getResource("background"))
@@ -39,7 +41,6 @@ def main():
     enemy = Enemy((400, 100), 2, resourceProvider.getResource("rubinEnemy"))
 
     playerShip.action = 2
-
     lastUpdate = pygame.time.get_ticks()
     player.animationCooldown = 90
 
@@ -78,7 +79,7 @@ def main():
 
         key = pygame.key.get_pressed()
 
-        if key[pygame.K_e]:
+        if key[pygame.K_SPACE]:
             player.toggleShooting()
         if key[pygame.K_a]:
             player.moveLeft()

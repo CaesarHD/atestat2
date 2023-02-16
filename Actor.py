@@ -35,8 +35,6 @@ class Actor:
         self.resetAnimation()
 
     def resetAnimation(self):
-        # print(self.frame)
-        # print(self.animationList[self.action])
         if self.frame >= len(self.animationList[self.action]):
             self.frame = 0
 

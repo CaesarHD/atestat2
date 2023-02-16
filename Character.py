@@ -19,14 +19,15 @@ class Character(Actor):
         self.isPreJumping = False
         self.isLanding = False
         self.velocity = 6
+        self.actions = resource.actions
 
     def fall(self):
         if self.isArmed:
-            self.action = 8
+            self.action = self.actions["jumpArmed"]
             if self.isShooting:
                 self.shoot()
         else:
-            self.action = 3
+            self.action = self.actions["jump"]
 
         self.gravityForce += 1.5
         self.moveDown()
@@ -39,14 +40,14 @@ class Character(Actor):
                 self.preJump()
             else:
                 if self.isArmed:
-                    self.action = 8
+                    self.action = self.actions["jumpArmed"]
                     if self.isShooting:
                         self.shoot()
                 else:
-                    self.action = 3
+                    self.action = self.actions["jump"]
 
             #TODO: calculate this based on JUMP_HEIGHT
-            self.gravityForce -= 0.35
+            self.gravityForce -= 0.3
             if self.gravityForce <= 0.1:
                 self.gravityForce = 0.1
 
@@ -58,31 +59,31 @@ class Character(Actor):
     def preJump(self):
         if self.isPreJumping:
             if self.isArmed:
-                self.action = 7
+                self.action = self.actions["preJumpArmed"]
             else:
-                self.action = 2
+                self.action = self.actions["preJump"]
             if self.frame == 2:
                 self.isPreJumping = False
     def landing(self):
         if self.isLanding:
             if self.isArmed:
-                self.action = 9
+                self.action = self.actions["landingArmed"]
             else:
-                self.action = 4
+                self.action = self.actions["landing"]
             if self.frame == 1:
                 self.isLanding = False
     def shoot(self):
         if self.isIdle:
-            self.action = 10
+            self.action = self.actions["idleShoot"]
             if self.frame == 2:
                 self.isShooting = False
         else:
             if self.isJumping or self.isFalling:
-                self.action = 13
+                self.action = self.actions["jumpShoot"]
                 if self.frame == 2:
                     self.isShooting = False
             else:
-                self.action = 11
+                self.action = self.actions["walkShoot"]
                 if self.frame == 5:
                     self.isShooting = False
 
@@ -92,9 +93,9 @@ class Character(Actor):
         self.isIdle = False
         if not self.isJumping and not self.isFalling and not self.isShooting:
             if not self.isArmed:
-                self.action = 1
+                self.action = self.actions["walk"]
             else:
-                self.action = 6
+                self.action = self.actions["walkArmed"]
         if self.isShooting:
             self.shoot()
         initial = self.bounds.topleft
@@ -106,9 +107,9 @@ class Character(Actor):
         self.isLeft = False
         if not self.isJumping and not self.isFalling and not self.isShooting:
             if not self.isArmed:
-                self.action = 1
+                self.action = self.actions["walk"]
             else:
-                self.action = 6
+                self.action = self.actions["walkArmed"]
         if self.isShooting:
             self.shoot()
         initial = self.bounds.topleft
@@ -122,9 +123,9 @@ class Character(Actor):
                 self.shoot()
             else:
                 if self.isArmed:
-                    self.action = 5
+                    self.action = self.actions["idleArmed"]
                 else:
-                    self.action = 0
+                    self.action = self.actions["idle"]
     def moveUp(self):
         initial = self.bounds.topleft
         self.bounds.topleft = (initial[0], initial[1] - self.gravityForce)
