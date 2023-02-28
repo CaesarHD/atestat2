@@ -1,7 +1,8 @@
 from Character import Character
 
-GROUND = 430
+GROUND = 420
 GFORCE = 10
+PLAYER_DISTANCE = 200
 
 
 class Enemy(Character):
@@ -12,23 +13,35 @@ class Enemy(Character):
         self.isArmed = True
         self.isPreJumping = False
         self.isLanding = False
-        self.velocity = 7
-        self.right = True
+        self.velocity = 6
 
 
     def fall(self):
         self.gravityForce += 1.5
         self.moveDown()
 
-    def moving(self):
+    def getDistance(self, actor):
+        return self.bounds.topleft[0] - actor.bounds.topleft[0]
 
-        if self.right:
-            if self.bounds.topleft[0] < 700:
-                self.moveRight()
-            else:
-                self.right = False
-        if not self.right:
-            if self.bounds.topleft[0] > 20:
-                self.moveLeft()
-            else:
-                self.right = True
+    def changeOrientation(self, actor):
+        distance = self.getDistance(actor)
+        if distance < 0:
+            self.isRight = True
+        else:
+            self.isRight = False
+
+    def moving(self, player):
+        if self.isCloseTo(player):
+            self.action = self.actions["idleShoot"]
+            self.changeOrientation(player)
+        else:
+            if self.isRight:
+                if self.bounds.topleft[0] < 700:
+                    self.moveRight()
+                else:
+                    self.isRight = False
+            if not self.isRight:
+                if self.bounds.topleft[0] > 20:
+                    self.moveLeft()
+                else:
+                    self.isRight = True

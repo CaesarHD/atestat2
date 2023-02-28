@@ -2,6 +2,7 @@ from pygame import Rect
 import pygame
 
 GFORCE = 2
+PLAYER_DISTANCE = 200
 
 class Actor:
 
@@ -22,6 +23,7 @@ class Actor:
         self.animationCooldown = 120
         self.frame = 0
         self.stepCounter = 0
+        self.scroll = 0
 
         for animation in self.animationSteps:
             tempImageList = []
@@ -73,3 +75,7 @@ class Actor:
     def moveDown(self):
         initial = self.bounds.topleft
         self.bounds.topleft = (initial[0], initial[1] + self.velocity)
+
+    def isCloseTo(self, actor):
+        return abs(self.bounds.topleft[0] - actor.bounds.topleft[0]) < PLAYER_DISTANCE
+

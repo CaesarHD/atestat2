@@ -4,9 +4,10 @@ from pygame import Rect
 from Actor import Actor
 from Spritesheet import Spritesheet
 
-GROUND = 430
+GROUND = 420
 JUMP_HEIGHT = 150
 GFORCE = 10
+
 
 class Character(Actor):
 
@@ -18,8 +19,10 @@ class Character(Actor):
         self.isArmed = False
         self.isPreJumping = False
         self.isLanding = False
-        self.velocity = 6
+        self.velocity = 8
         self.actions = resource.actions
+        self.walkInPlaceRight = False
+        self.walkInPlaceLeft = False
 
     def fall(self):
         if self.isArmed:
@@ -46,7 +49,7 @@ class Character(Actor):
                 else:
                     self.action = self.actions["jump"]
 
-            #TODO: calculate this based on JUMP_HEIGHT
+            # TODO: calculate this based on JUMP_HEIGHT
             self.gravityForce -= 0.3
             if self.gravityForce <= 0.1:
                 self.gravityForce = 0.1
@@ -64,6 +67,7 @@ class Character(Actor):
                 self.action = self.actions["preJump"]
             if self.frame == 2:
                 self.isPreJumping = False
+
     def landing(self):
         if self.isLanding:
             if self.isArmed:
@@ -72,6 +76,7 @@ class Character(Actor):
                 self.action = self.actions["landing"]
             if self.frame == 1:
                 self.isLanding = False
+
     def shoot(self):
         if self.isIdle:
             self.action = self.actions["idleShoot"]
@@ -88,6 +93,7 @@ class Character(Actor):
                     self.isShooting = False
 
     def moveLeft(self):
+        self.walkInPlaceRight = False
         self.isLeft = True
         self.isRight = False
         self.isIdle = False
@@ -98,10 +104,12 @@ class Character(Actor):
                 self.action = self.actions["walkArmed"]
         if self.isShooting:
             self.shoot()
-        initial = self.bounds.topleft
-        self.bounds.topleft = (initial[0] - self.velocity, initial[1])
+        if not self.walkInPlaceLeft:
+            initial = self.bounds.topleft
+            self.bounds.topleft = (initial[0] - self.velocity, initial[1])
 
     def moveRight(self):
+        self.walkInPlaceLeft = False
         self.isIdle = False
         self.isRight = True
         self.isLeft = False
@@ -112,10 +120,13 @@ class Character(Actor):
                 self.action = self.actions["walkArmed"]
         if self.isShooting:
             self.shoot()
-        initial = self.bounds.topleft
-        self.bounds.topleft = (initial[0] + self.velocity, initial[1])
+        if not self.walkInPlaceRight:
+            initial = self.bounds.topleft
+            self.bounds.topleft = (initial[0] + self.velocity, initial[1])
 
     def inIdle(self):
+        self.walkInPlaceRight = False
+        self.walkInPlaceLeft = False
         if not self.isFalling and not self.isJumping:
             self.isIdle = True
 
@@ -126,6 +137,7 @@ class Character(Actor):
                     self.action = self.actions["idleArmed"]
                 else:
                     self.action = self.actions["idle"]
+
     def moveUp(self):
         initial = self.bounds.topleft
         self.bounds.topleft = (initial[0], initial[1] - self.gravityForce)
@@ -135,7 +147,7 @@ class Character(Actor):
         self.bounds.topleft = (initial[0], initial[1] + self.gravityForce)
 
     def gravity(self):
-        if self.bounds.topleft[1] < GROUND:
+        if self.bounds.y < GROUND:
             if not self.isJumping:
                 self.isFalling = True
                 self.isIdle = False
@@ -144,7 +156,6 @@ class Character(Actor):
             self.isFalling = False
             self.landing()
             self.gravityForce = GFORCE
-
 
     def toggleWeapon(self):
         self.isArmed = not self.isArmed
@@ -159,5 +170,8 @@ class Character(Actor):
         if self.isArmed and not self.isShooting:
             self.isShooting = True
 
+    def toggleScrollBackgroundRight(self):
+        return self.bounds.x > 600
 
-
+    def toggleScrollBackgroundLeft(self):
+        return self.bounds.x < 400
