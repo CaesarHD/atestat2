@@ -3,15 +3,16 @@ import pygame
 
 GFORCE = 2
 PLAYER_DISTANCE = 200
+SPEED = 2
 
 class Actor:
 
     def __init__(self, pos, scale, resource):
-        self.bounds = Rect(pos, resource.size)
+        self.scale = scale
+        self.bounds = Rect(pos, (resource.size[0]*self.scale, resource.size[1]*self.scale))
         self.velocity = 7
         self.gravityForce = GFORCE
         self.spritesheet = resource.spritesheet
-        self.scale = scale
         self.isFalling = False
         self.isIdle = True
         self.isRight = True
@@ -42,12 +43,14 @@ class Actor:
 
     def drawActor(self, screen):
         self.resetAnimation()
-
         if self.isRight:
             screen.blit(self.animationList[self.action][self.frame], self.bounds)
         else:
             self.animationListFlip = pygame.transform.flip(self.animationList[self.action][self.frame], True, False)
             screen.blit(self.animationListFlip, self.bounds)
+
+    def scrolling(self, speed):
+        self.bounds.x += speed
 
     def position(self, pos):
         self.bounds.topleft = pos
@@ -60,21 +63,21 @@ class Actor:
         initial = self.bounds.topleft
         self.position((initial[0], y))
 
-    def moveRight(self):
+    def moveRight(self, velocity):
         initial = self.bounds.topleft
-        self.bounds.topleft = (initial[0] + self.velocity, initial[1])
+        self.bounds.topleft = (initial[0] + velocity, initial[1])
 
-    def moveLeft(self):
+    def moveLeft(self, velocity):
         initial = self.bounds.topleft
-        self.bounds.topleft = (initial[0] - self.velocity, initial[1])
+        self.bounds.topleft = (initial[0] - velocity, initial[1])
 
-    def moveUp(self):
+    def moveUp(self, velocity):
         initial = self.bounds.topleft
-        self.bounds.topleft = (initial[0], initial[1] - self.velocity)
+        self.bounds.topleft = (initial[0], initial[1] -velocity)
 
-    def moveDown(self):
+    def moveDown(self, velocity):
         initial = self.bounds.topleft
-        self.bounds.topleft = (initial[0], initial[1] + self.velocity)
+        self.bounds.topleft = (initial[0], initial[1] + velocity)
 
     def isCloseTo(self, actor):
         return abs(self.bounds.topleft[0] - actor.bounds.topleft[0]) < PLAYER_DISTANCE

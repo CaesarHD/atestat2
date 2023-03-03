@@ -68,8 +68,9 @@ class Character(Actor):
             if self.frame == 2:
                 self.isPreJumping = False
 
-    def landing(self):
+    def landing(self, objects):
         if self.isLanding:
+            self.bounds.bottom = objects.bounds.top
             if self.isArmed:
                 self.action = self.actions["landingArmed"]
             else:
@@ -146,15 +147,24 @@ class Character(Actor):
         initial = self.bounds.topleft
         self.bounds.topleft = (initial[0], initial[1] + self.gravityForce)
 
-    def gravity(self):
-        if self.bounds.y < GROUND:
+    def isCollideWith(self, obstacle):
+        return self.bounds.colliderect(obstacle.bounds)
+
+    def isOnObject(self, obstacle):
+        return self.bounds.bottom + self.gravityForce > obstacle.bounds.top
+
+    def placeCharacterOnObject(self, obstacle):
+        self.bounds.bottom = obstacle.bounds.top
+
+    def gravity(self, obstacle):
+        if not self.isOnObject(obstacle):
             if not self.isJumping:
                 self.isFalling = True
                 self.isIdle = False
                 self.fall()
         else:
+            self.placeCharacterOnObject(obstacle)
             self.isFalling = False
-            self.landing()
             self.gravityForce = GFORCE
 
     def toggleWeapon(self):

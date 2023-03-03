@@ -22,9 +22,9 @@ class Background(Actor):
             action = action + 1
 
     def scrolling(self, screen, scroll):
-        for x in range(5):
+        for x in range(10):
             speed = 1
             for i in self.backgrounds:
-                screen.blit(i, (self.bounds.size[0] * self.scale * x - scroll * speed, 0))
+                screen.blit(i, (self.bounds.size[0] * x - scroll * speed, 0))
                 speed += 0.5
 
