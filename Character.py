@@ -1,3 +1,5 @@
+from Bullet import Bullet
+from ResourceProvider import ResourceProvider
 import pygame
 from pygame import Rect
 
@@ -23,6 +25,7 @@ class Character(Actor):
         self.actions = resource.actions
         self.walkInPlaceRight = False
         self.walkInPlaceLeft = False
+        self.bullet = resource.bullet
 
     def fall(self):
         if self.isArmed:
@@ -179,9 +182,19 @@ class Character(Actor):
     def toggleShooting(self):
         if self.isArmed and not self.isShooting:
             self.isShooting = True
+            self.bullet.release = True
+            self.bulletPosition()
 
     def toggleScrollBackgroundRight(self):
         return self.bounds.x > 600
 
     def toggleScrollBackgroundLeft(self):
         return self.bounds.x < 400
+    
+    def getBulletDirection(self):
+        if self.bullet.direction == 0:
+            self.bullet.direction = self.bullet.getDirection(self)
+
+    def bulletPosition(self):
+        self.bullet.bounds.topleft = self.bounds.topleft
+    
