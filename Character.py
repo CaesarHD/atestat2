@@ -25,9 +25,10 @@ class Character(Actor):
         self.actions = resource.actions
         self.walkInPlaceRight = False
         self.walkInPlaceLeft = False
-        self.bullet = resource.bullet
+        self.bulletReload = False
 
     def fall(self):
+        self.isIdle = False
         if self.isArmed:
             self.action = self.actions["jumpArmed"]
             if self.isShooting:
@@ -37,7 +38,7 @@ class Character(Actor):
 
         self.gravityForce += 1.5
         self.moveDown()
-        self.isLanding = True
+        # self.isLanding = True
 
     def jump(self):
         if self.isJumping and not self.isFalling:
@@ -53,9 +54,9 @@ class Character(Actor):
                     self.action = self.actions["jump"]
 
             # TODO: calculate this based on JUMP_HEIGHT
-            self.gravityForce -= 0.3
-            if self.gravityForce <= 0.1:
-                self.gravityForce = 0.1
+            # self.gravityForce -= 0.3
+            # if self.gravityForce <= 0.1:
+            #     self.gravityForce = 0.1
 
             self.moveUp()
             currentPos = self.bounds.topleft[1]
@@ -86,15 +87,22 @@ class Character(Actor):
             self.action = self.actions["idleShoot"]
             if self.frame == 2:
                 self.isShooting = False
+                self.bulletReload = False
         else:
             if self.isJumping or self.isFalling:
                 self.action = self.actions["jumpShoot"]
                 if self.frame == 2:
                     self.isShooting = False
+                    self.bulletReload = False
             else:
                 self.action = self.actions["walkShoot"]
+                if self.frame == 0:
+                    self.bulletReload = False
+                if self.frame == 3:
+                    self.bulletReload = False
                 if self.frame == 5:
                     self.isShooting = False
+                    self.bulletReload = False
 
     def moveLeft(self):
         self.walkInPlaceRight = False
@@ -182,19 +190,11 @@ class Character(Actor):
     def toggleShooting(self):
         if self.isArmed and not self.isShooting:
             self.isShooting = True
-            self.bullet.release = True
-            self.bulletPosition()
+
 
     def toggleScrollBackgroundRight(self):
         return self.bounds.x > 600
 
     def toggleScrollBackgroundLeft(self):
         return self.bounds.x < 400
-    
-    def getBulletDirection(self):
-        if self.bullet.direction == 0:
-            self.bullet.direction = self.bullet.getDirection(self)
 
-    def bulletPosition(self):
-        self.bullet.bounds.topleft = self.bounds.topleft
-    

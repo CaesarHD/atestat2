@@ -31,16 +31,17 @@ def main():
     resourceProvider = ResourceProvider()
     action = Actions()
     resourceProvider.registerResource("playerBullet", 'Images\Bullet\player_bullet.png', [1], (28, 5), None, None)
-    playerBullet = Bullet((0, 0), 5, resourceProvider.getResource("playerBullet"))
-    resourceProvider.registerResource("rubinEnemy", 'Images/ENEMY_FRAMES/spritesheet.png', [6, 4, 3, 4], (57, 57), action.getActions("rubinEnemy"), None)
-    resourceProvider.registerResource("player", 'Images/ALIEN_FRAMES/spritesheet.png', [4, 6, 3, 1, 2, 4, 6, 3, 1, 2, 3, 6, 2, 3], (57, 57), action.getActions("player"), playerBullet)
+    resourceProvider.registerResource("enemyBullet", 'Images/Bullet/enemy_bullet.png', [1], (28, 5), None, None)
+    resourceProvider.registerResource("rubinEnemy", 'Images/ENEMY_FRAMES/spritesheet.png', [6, 4, 3, 4, 5], (57, 57), action.getActions("rubinEnemy"), None)
+    resourceProvider.registerResource("player", 'Images/ALIEN_FRAMES/spritesheet.png', [4, 6, 3, 1, 2, 4, 6, 3, 1, 2, 3, 6, 2, 3, 2, 6], (57, 57), action.getActions("player"), None)
     resourceProvider.registerResource("playerShip", 'Images/Alien_Ship/spritesheet.png', [1, 1, 1, 1], (485, 197), action.getActions("playerShip"), None)
     resourceProvider.registerResource("lvl1BG", 'Images/Backgrounds/LVL1/dinamicSpritesheet.png', [1, 1, 1], (1138, 320), None, None)
     resourceProvider.registerResource("lvl1BG_Spate", 'Images/Backgrounds/LVL1/staticSpritesheet.png', [4], (569, 320), None, None)
     resourceProvider.registerResource("lvl1Ground", 'Images/Backgrounds/LVL1/ground.png', [1], (1138, 38), None, None)
 
     player = Character((500, 100), 2, resourceProvider.getResource("player"))
-
+    playerBullet = []
+    enemyBullet = []
     background = Background((0, 0), 2, resourceProvider.getResource("lvl1BG"))
     backgroundSpate = Background((0, 0), 2, resourceProvider.getResource("lvl1BG_Spate"))
     ground = Ground((0, 0), 2, resourceProvider.getResource("lvl1Ground"))
@@ -60,6 +61,9 @@ def main():
     scroll = 0
 
     playerShip.bounds.bottom = ground.bounds.top
+
+    i = 0
+    player.action = 15
 
     while running:
 
@@ -85,6 +89,8 @@ def main():
             enemy.tickAnimation()
             backgroundSpate.tickAnimation()
             lastUpdate = currentTime
+
+            player.drawActor(screen)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -115,17 +121,39 @@ def main():
         else:
             player.inIdle()
 
+        screen.fill("darkgreen")
+
         player.jump()
 
         enemy.drawActor(screen)
 
         player.drawActor(screen)
 
-        if player.bullet.release:
-            player.bullet.drawActor(screen)
-            # pygame.draw.rect(screen.screen, (255,0,0), player.bullet.bounds)
+        if player.isShooting and not player.bulletReload:
+            playerBullet.append(Bullet((player.bounds.x, player.bounds.y + 42), 5, resourceProvider.getResource("playerBullet"), player.isRight))
+            player.bulletReload = True
+
+        for bullet in playerBullet:
+            if not bullet.out:
+                bullet.propell(screen, enemy)
+                bullet.drawActor(screen)
+            else:
+                del bullet
+
+        if enemy.isShooting and not enemy.bulletReload:
+            enemyBullet.append(Bullet((enemy.bounds.x, enemy.bounds.y + 42), 5, resourceProvider.getResource("enemyBullet"), enemy.isRight))
+            enemy.bulletReload = True
+
+        for enemyBull in enemyBullet:
+            if not enemyBull.out:
+                enemyBull.propell(screen, enemy)
+                enemyBull.drawActor(screen)
+            else:
+                del enemyBull
+
+        # pygame.draw.rect(screen.screen, (255, 0, 0), playerBullet[0].bounds)
         # pygame.draw.rect(screen.screen, (255, 0, 0), playerShip.bounds)
-        # pygame.draw.rect(screen.screen, (255, 0, 0), player.bounds)
+        # pygame.draw.rect(screen.screen, (255, 0, 0), enemy.bounds)
         # pygame.draw.rect(screen.screen, (255, 0, 0), ground.bounds)
 
         pygame.display.update()

@@ -33,8 +33,10 @@ class Enemy(Character):
     def moving(self, player):
         if self.isCloseTo(player):
             self.action = self.actions["idleShoot"]
+            self.isShooting = True
             self.changeOrientation(player)
         else:
+            self.isShooting = False
             if self.isRight:
                 if self.bounds.topleft[0] < 700:
                     self.moveRight()

@@ -1,35 +1,25 @@
 from Actor import Actor
 import pygame
 
-class Bullet(Actor):
-    def __init__(self, pos, scale, resource):
-        super().__init__(pos, scale, resource)
-        self.direction = 0
-        self.radius = 2000
-        self.release = False
-        
-    def getDirection(self, player):
-        self.isRight = player.isRight
-        self.isLeft = player.isLeft
-        if self.isRight:
-            return 1
-        if self.isLeft:
-            return -1
 
-    def drawActor(self, screen):
-        if self.radius > 0:
+class Bullet(Actor):
+    def __init__(self, pos, scale, resource, isRight):
+        super().__init__(pos, scale, resource)
+        self.isRight = isRight
+        self.out = False
+
+        if self.isRight:
+            self.bounds.x += 30
+        else:
+            self.bounds.x -= 50
+    def collideWith(self, screen, actor):
+        return (abs(self.bounds.x - actor.bounds.x) < 60) or self.bounds.x > screen.screenWidth or self.bounds.x < 0
+
+    def propell(self, screen, actor):
+        if not self.collideWith(screen, actor):
             if self.isRight:
-                screen.blit(self.animationList[self.action][self.frame], self.bounds)
+                self.moveRight(40)
             else:
-                self.animationListFlip = pygame.transform.flip(self.animationList[self.action][self.frame], True, False)
-                screen.blit(self.animationListFlip, self.bounds)
-            self.radius -= 1
-            if self.direction > 0:
-                self.moveRight(20)
-            if self.direction < 0:
-                self.moveLeft(20)
-        if self.radius == 0:
-            self.release = False
-            self.radius = 2000
-            self.direction = 0
-    
+                self.moveLeft(40)
+        else:
+            self.out = True
