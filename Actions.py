@@ -14,7 +14,8 @@ class Actions:
                          "walkShoot": 11,
                          "preJumpShoot": 12,
                          "jumpShoot": 13,
-                         "landingShoot": 14}
+                         "landingShoot": 14,
+                         "dead": 15}
 
         rubinsActions = {"idleArmed": 0,
                          "walkArmed": 1,

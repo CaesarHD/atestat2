@@ -26,6 +26,7 @@ class Character(Actor):
         self.walkInPlaceRight = False
         self.walkInPlaceLeft = False
         self.bulletReload = False
+        self.isDead = False
 
     def fall(self):
         self.isIdle = False
@@ -54,9 +55,9 @@ class Character(Actor):
                     self.action = self.actions["jump"]
 
             # TODO: calculate this based on JUMP_HEIGHT
-            # self.gravityForce -= 0.3
-            # if self.gravityForce <= 0.1:
-            #     self.gravityForce = 0.1
+            self.gravityForce -= 0.3
+            if self.gravityForce <= 0.1:
+                self.gravityForce = 0.1
 
             self.moveUp()
             currentPos = self.bounds.topleft[1]
@@ -197,4 +198,9 @@ class Character(Actor):
 
     def toggleScrollBackgroundLeft(self):
         return self.bounds.x < 400
+
+    def die(self):
+        self.action = self.actions["dead"]
+
+
 

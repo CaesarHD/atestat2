@@ -35,15 +35,15 @@ def main():
     resourceProvider.registerResource("rubinEnemy", 'Images/ENEMY_FRAMES/spritesheet.png', [6, 4, 3, 4, 5], (57, 57), action.getActions("rubinEnemy"), None)
     resourceProvider.registerResource("player", 'Images/ALIEN_FRAMES/spritesheet.png', [4, 6, 3, 1, 2, 4, 6, 3, 1, 2, 3, 6, 2, 3, 2, 6], (57, 57), action.getActions("player"), None)
     resourceProvider.registerResource("playerShip", 'Images/Alien_Ship/spritesheet.png', [1, 1, 1, 1], (485, 197), action.getActions("playerShip"), None)
-    resourceProvider.registerResource("lvl1BG", 'Images/Backgrounds/LVL1/dinamicSpritesheet.png', [1, 1, 1], (1138, 320), None, None)
-    resourceProvider.registerResource("lvl1BG_Spate", 'Images/Backgrounds/LVL1/staticSpritesheet.png', [4], (569, 320), None, None)
-    resourceProvider.registerResource("lvl1Ground", 'Images/Backgrounds/LVL1/ground.png', [1], (1138, 38), None, None)
+    resourceProvider.registerResource("lvl1Ground", 'Images/Levels/Level1/LEVEL_1/GROUND_2_FLAT.png', [1], (1138, 38), None, None)
+    resourceProvider.registerResource("lvl1StaticBackground", 'Images/Levels/Level1/LEVEL_1/BACKGROUND.png', [1], (569, 320), None, None)
+    resourceProvider.registerResource("lvl1DinamicBackground", 'Images/Levels/Level1/LEVEL_1/spritesheet (3).png', [1, 1, 1], (1138, 320), None, None)
 
     player = Character((500, 100), 2, resourceProvider.getResource("player"))
     playerBullet = []
     enemyBullet = []
-    background = Background((0, 0), 2, resourceProvider.getResource("lvl1BG"))
-    backgroundSpate = Background((0, 0), 2, resourceProvider.getResource("lvl1BG_Spate"))
+    staticBackground = Background((0, 0), 2, resourceProvider.getResource("lvl1StaticBackground"))
+    dinamicBackgorund = Background((0, 0), 2, resourceProvider.getResource("lvl1DinamicBackground"))
     ground = Ground((0, 0), 2, resourceProvider.getResource("lvl1Ground"))
 
     playerShip = Actor((0, 0), 1.5, resourceProvider.getResource("playerShip"))
@@ -54,7 +54,6 @@ def main():
     lastUpdate = pygame.time.get_ticks()
     player.animationCooldown = 90
 
-    color = (220, 225, 220)
 
     running = True
 
@@ -67,94 +66,116 @@ def main():
 
     while running:
 
-        screen.fill(color)
+        # screen.fill(color)
 
         clock.tick(60)
-        backgroundSpate.drawActor(screen)
-        background.scrolling(screen, scroll)
+        staticBackground.drawActor(screen)
+        dinamicBackgorund.scrolling(screen, scroll)
         ground.scrolling(screen, scroll)
         playerShip.drawActor(screen)
 
-        if player.walkInPlaceLeft:
-            playerShip.scrolling(8)
-            enemy.scrolling(8)
-        if player.walkInPlaceRight:
-            playerShip.scrolling(-8)
-            enemy.scrolling(-8)
+        if not player.isDead:
 
+            if player.walkInPlaceLeft:
+                playerShip.scrolling(8)
+                enemy.scrolling(8)
+            if player.walkInPlaceRight:
+                playerShip.scrolling(-8)
+                enemy.scrolling(-8)
 
-        currentTime = pygame.time.get_ticks()
-        if currentTime - lastUpdate > player.animationCooldown:
-            player.tickAnimation()
-            enemy.tickAnimation()
-            backgroundSpate.tickAnimation()
-            lastUpdate = currentTime
+            currentTime = pygame.time.get_ticks()
+            if currentTime - lastUpdate > player.animationCooldown:
+                player.tickAnimation()
+                enemy.tickAnimation()
+                lastUpdate = currentTime
+
+                player.drawActor(screen)
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+                if event.type == pygame.KEYDOWN:
+                    match event.key:
+                        case pygame.K_q: player.toggleWeapon()
+                        case pygame.K_w: player.toggleJump()
+
+            player.gravity(ground)
+            enemy.gravity(ground)
+            enemy.moving(player)
+
+            key = pygame.key.get_pressed()
+
+            if key[pygame.K_p]:
+                player.isDead = True
+            if key[pygame.K_SPACE]:
+                player.toggleShooting()
+            if key[pygame.K_a]:
+                player.moveLeft()
+                if player.toggleScrollBackgroundLeft():
+                    scroll -= 4
+                    player.walkInPlaceLeft = True
+            elif key[pygame.K_d]:
+                player.moveRight()
+                if player.toggleScrollBackgroundRight():
+                    scroll += 4
+                    player.walkInPlaceRight = True
+            else:
+                player.inIdle()
+
+            # screen.fill("darkgreen")
+
+            player.jump()
+
+            enemy.drawActor(screen)
 
             player.drawActor(screen)
 
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-            if event.type == pygame.KEYDOWN:
-                match event.key:
-                    case pygame.K_q: player.toggleWeapon()
-                    case pygame.K_w: player.toggleJump()
+            if player.isShooting and not player.bulletReload:
+                playerBullet.append(Bullet((player.bounds.x, player.bounds.y + 42), 5, resourceProvider.getResource("playerBullet"), player.isRight))
+                player.bulletReload = True
 
-        player.gravity(ground)
-        enemy.gravity(ground)
-        enemy.moving(player)
+            for bullet in playerBullet:
+                if not bullet.out:
+                    bullet.propell(screen, enemy)
+                    bullet.drawActor(screen)
+                else:
+                    del bullet
 
-        key = pygame.key.get_pressed()
+            if enemy.isShooting and not enemy.bulletReload:
+                enemyBullet.append(Bullet((enemy.bounds.x, enemy.bounds.y + 42), 5, resourceProvider.getResource("enemyBullet"), enemy.isRight))
+                enemy.bulletReload = True
 
-        if key[pygame.K_SPACE]:
-            player.toggleShooting()
-        if key[pygame.K_a]:
-            player.moveLeft()
-            if player.toggleScrollBackgroundLeft():
-                scroll -= 4
-                player.walkInPlaceLeft = True
-        elif key[pygame.K_d]:
-            player.moveRight()
-            if player.toggleScrollBackgroundRight():
-                scroll += 4
-                player.walkInPlaceRight = True
+            for enemyBull in enemyBullet:
+                if not enemyBull.out:
+                    enemyBull.propell(screen, enemy)
+                    enemyBull.drawActor(screen)
+                    pygame.draw.rect(screen.screen, (255, 0, 0), enemyBull.bounds)
+                else:
+                    del enemyBull
+
+            # pygame.draw.rect(screen.screen, (255, 0, 0), playerBullet[0].bounds)
+            # pygame.draw.rect(screen.screen, (255, 0, 0), playerShip.bounds)
+            # pygame.draw.rect(screen.screen, (255, 0, 0), enemy.bounds)
+            # pygame.draw.rect(screen.screen, (255, 0, 0), ground.bounds)
+
         else:
-            player.inIdle()
 
-        screen.fill("darkgreen")
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
 
-        player.jump()
+            currentTime = pygame.time.get_ticks()
+            if currentTime - lastUpdate > player.animationCooldown:
+                if player.frame != 5:
+                    player.tickAnimation()
+                enemy.tickAnimation()
+                backgroundSpate.tickAnimation()
+                lastUpdate = currentTime
 
-        enemy.drawActor(screen)
+            player.die()
 
-        player.drawActor(screen)
-
-        if player.isShooting and not player.bulletReload:
-            playerBullet.append(Bullet((player.bounds.x, player.bounds.y + 42), 5, resourceProvider.getResource("playerBullet"), player.isRight))
-            player.bulletReload = True
-
-        for bullet in playerBullet:
-            if not bullet.out:
-                bullet.propell(screen, enemy)
-                bullet.drawActor(screen)
-            else:
-                del bullet
-
-        if enemy.isShooting and not enemy.bulletReload:
-            enemyBullet.append(Bullet((enemy.bounds.x, enemy.bounds.y + 42), 5, resourceProvider.getResource("enemyBullet"), enemy.isRight))
-            enemy.bulletReload = True
-
-        for enemyBull in enemyBullet:
-            if not enemyBull.out:
-                enemyBull.propell(screen, enemy)
-                enemyBull.drawActor(screen)
-            else:
-                del enemyBull
-
-        # pygame.draw.rect(screen.screen, (255, 0, 0), playerBullet[0].bounds)
-        # pygame.draw.rect(screen.screen, (255, 0, 0), playerShip.bounds)
-        # pygame.draw.rect(screen.screen, (255, 0, 0), enemy.bounds)
-        # pygame.draw.rect(screen.screen, (255, 0, 0), ground.bounds)
+            player.drawActor(screen)
+            enemy.drawActor(screen)
 
         pygame.display.update()
 
