@@ -27,6 +27,22 @@ class Character(Actor):
         self.walkInPlaceLeft = False
         self.bulletReload = False
         self.isDead = False
+        self.bullets = []
+
+    def updateActorBullets(self, actor):
+        if actor.isShooting and not actor.bulletReload:
+            self.bullets.append(
+                Bullet((actor.bounds.x, actor.bounds.y + 42), 5, resourceProvider.getResource(bulletResource),
+                       actor.isRight))
+            actor.bulletReload = True
+
+        for bullet in bullets:
+            if not bullet.out:
+                bullet.propell(screen, enemy)
+                bullet.drawActor(screen)
+                pygame.draw.rect(screen.screen, (255, 0, 0), bullet.bounds)
+            else:
+                del bullet
 
     def fall(self):
         self.isIdle = False
@@ -203,4 +219,8 @@ class Character(Actor):
         self.action = self.actions["dead"]
 
 
-
+    def drawActor(self, screen):
+        super().drawActor(screen)
+        updateBullets(screen)
+        
+        
