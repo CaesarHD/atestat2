@@ -13,7 +13,7 @@ GFORCE = 10
 
 class Character(Actor):
 
-    def __init__(self, pos, scale, resource):
+    def __init__(self, pos, scale, resource, bulletSpawnLocation):
         super().__init__(pos, scale, resource)
         self.preJumpPosition = GROUND
         self.isShooting = False
@@ -27,6 +27,8 @@ class Character(Actor):
         self.walkInPlaceLeft = False
         self.bulletReload = False
         self.isDead = False
+        self.bullets = []
+        self.bullet = resource.bullet
 
     def fall(self):
         self.isIdle = False
@@ -202,5 +204,17 @@ class Character(Actor):
     def die(self):
         self.action = self.actions["dead"]
 
+    def updateBullet(self, objects, screen):
+        if self.isShooting and not self.bulletReload:
+            self.bullets.append(
+                Bullet((self.bounds.x, self.bounds.y + 42), 5, self.bullet,
+                       self.isRight))
+            self.bulletReload = True
+        for bullet in self.bullets:
+            if not bullet.out:
+                bullet.propell(objects, screen)
+                bullet.drawActor(screen)
+            else:
+                del bullet
 
 

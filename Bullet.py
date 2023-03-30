@@ -13,14 +13,14 @@ class Bullet(Actor):
         else:
             self.bounds.x -= 50
 
-    def collideWith(self, screen, actor):
-        return (abs(self.bounds.x - actor.bounds.x) < 60 and (self.bounds.top >= actor.bounds.top)) or self.collideWithScreen(screen)
+    def collideWith(self, objects, screen):
+        return (abs(self.bounds.x - objects.bounds.x) < 60 and (self.bounds.top >= objects.bounds.top)) or self.collideWithScreen(screen)
 
     def collideWithScreen(self, screen):
         return self.bounds.x > screen.screenWidth or self.bounds.x < 0
 
-    def propell(self, screen, actor):
-        if not self.collideWith(screen, actor):
+    def propell(self, objects, screen):
+        if not self.collideWith(objects, screen):
             if self.isRight:
                 self.moveRight(40)
             else:

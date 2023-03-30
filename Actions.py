@@ -20,6 +20,7 @@ class Actions:
         rubinsActions = {"idleArmed": 0,
                          "walkArmed": 1,
                          "idleShoot": 2,
+                         "jumpShoot": 2,
                          "walkShoot": 3}
 
         playerShipActions = {"landedOFF": 0,
