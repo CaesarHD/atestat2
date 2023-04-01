@@ -60,7 +60,6 @@ playerShip.action = 0
 lastUpdate = pygame.time.get_ticks()
 scroll = 0
 playerShip.bounds.bottom = ground.bounds.top
-i = 0
 player.action = 15
 
 objects = [playerShip]
