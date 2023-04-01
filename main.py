@@ -26,7 +26,7 @@ screen = Screen(800*1.42, 480*1.33)
 # level = Levels()
 resourceProvider = ResourceProvider()
 action = Actions()
-resourceProvider.registerResource("playerBullet", 'Images\Bullet\player_bullet.png', [1], (28, 5), None, None)
+resourceProvider.registerResource("playerBullet", 'Images/Bullet/player_bullet.png', [1], (28, 5), None, None)
 resourceProvider.registerResource("rubinBullet", 'Images/Bullet/enemy_bullet.png', [1], (28, 5), None, None)
 playerBullet = resourceProvider.getResource("playerBullet")
 rubinBullet = resourceProvider.getResource("rubinBullet")
@@ -50,10 +50,10 @@ enemy4 = Enemy((10000, 100), 2, resourceProvider.getResource("rubinEnemy"), 3.5,
 
 rubinEnemies = []
 
-rubinEnemies.append(enemy1)
-rubinEnemies.append(enemy2)
-rubinEnemies.append(enemy3)
-rubinEnemies.append(enemy4)
+# rubinEnemies.append(enemy1)
+# rubinEnemies.append(enemy2)
+# rubinEnemies.append(enemy3)
+# rubinEnemies.append(enemy4)
 
 playerShip.action = 0
 
@@ -65,7 +65,7 @@ player.action = 15
 objects = [playerShip]
 
 playerOpponents = rubinEnemies
-enemyOpponents = [player]
+enemyOpponents = []
 
 running = True
 
@@ -121,11 +121,13 @@ def tickGame():
     global scroll
     global lastUpdate
 
-    walkInPlace()
     updateActorsAnimation()
     handleInputEvent()
     drawCharacters()
-    print(player.bulletsReceived)
+
+    walkInPlace()
+
+    # print(player.bulletsReceived)
 
 
 def drawCharacters():
@@ -162,14 +164,15 @@ def updateActorsAnimation():
 
 
 def walkInPlace():
+    offset = 8
     if player.walkInPlaceLeft:
-        playerShip.scrolling(8)
+        playerShip.scrolling(offset)
         for enemy in rubinEnemies:
-            enemy.scrolling(8)
+            enemy.scrolling(offset)
     if player.walkInPlaceRight:
-        playerShip.scrolling(-8)
+        playerShip.scrolling(-offset)
         for enemy in rubinEnemies:
-            enemy.scrolling(-8)
+            enemy.scrolling(-offset)
 
 
 def handleInputEvent():

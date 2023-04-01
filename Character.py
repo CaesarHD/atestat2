@@ -6,6 +6,9 @@ from pygame import Rect
 from Actor import Actor
 from Spritesheet import Spritesheet
 
+RIGHT_SCROLL_BOUNDARY = 600
+LEFT_SCROLL_BOUNDARY = 400
+
 GROUND = 420
 JUMP_HEIGHT = 150
 GFORCE = 10
@@ -103,7 +106,7 @@ class Character(Actor):
                     self.bulletReload = False
             else:
                 self.action = self.actions["walkShoot"]
-                if self.frame == 5:
+                if self.frame == 5 or self.frame == 2:
                     self.isShooting = False
                     self.bulletReload = False
 
@@ -195,10 +198,10 @@ class Character(Actor):
             self.isShooting = True
 
     def toggleScrollBackgroundRight(self):
-        return self.bounds.x > 600
+        return self.bounds.x >= RIGHT_SCROLL_BOUNDARY
 
     def toggleScrollBackgroundLeft(self):
-        return self.bounds.x < 400
+        return self.bounds.x <= LEFT_SCROLL_BOUNDARY
 
     def die(self):
         self.action = self.actions["dead"]
@@ -211,10 +214,12 @@ class Character(Actor):
             self.bullets.append(
                 Bullet((self.bounds.x, self.bounds.y + self.bulletSpawnLocation), self.bulletSize, self.bullet,
                        self.isRight))
+            print(len(self.bullets))
             self.bulletReload = True
         for bullet in self.bullets:
             if not bullet.out:
                 bullet.propell(objects, characters, screen)
                 bullet.drawActor(screen)
             else:
+                self.bullets.remove(bullet)
                 del bullet
