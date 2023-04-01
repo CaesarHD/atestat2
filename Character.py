@@ -13,7 +13,7 @@ GFORCE = 10
 
 class Character(Actor):
 
-    def __init__(self, pos, scale, resource, bulletSpawnLocation):
+    def __init__(self, pos, scale, resource, bulletSize, bulletSpawnLocation):
         super().__init__(pos, scale, resource)
         self.preJumpPosition = GROUND
         self.isShooting = False
@@ -26,9 +26,13 @@ class Character(Actor):
         self.walkInPlaceRight = False
         self.walkInPlaceLeft = False
         self.bulletReload = False
+        self.isShot = False
         self.isDead = False
         self.bullets = []
         self.bullet = resource.bullet
+        self.bulletSpawnLocation = bulletSpawnLocation
+        self.bulletSize = bulletSize
+        self.bulletsReceived = 15
 
     def fall(self):
         self.isIdle = False
@@ -99,10 +103,6 @@ class Character(Actor):
                     self.bulletReload = False
             else:
                 self.action = self.actions["walkShoot"]
-                if self.frame == 0:
-                    self.bulletReload = False
-                if self.frame == 3:
-                    self.bulletReload = False
                 if self.frame == 5:
                     self.isShooting = False
                     self.bulletReload = False
@@ -194,7 +194,6 @@ class Character(Actor):
         if self.isArmed and not self.isShooting:
             self.isShooting = True
 
-
     def toggleScrollBackgroundRight(self):
         return self.bounds.x > 600
 
@@ -203,18 +202,19 @@ class Character(Actor):
 
     def die(self):
         self.action = self.actions["dead"]
+        if not self.isDead:
+            if self.frame == 4:
+                self.isDead = True
 
-    def updateBullet(self, objects, screen):
+    def updateBullet(self, objects, characters, screen):
         if self.isShooting and not self.bulletReload:
             self.bullets.append(
-                Bullet((self.bounds.x, self.bounds.y + 42), 5, self.bullet,
+                Bullet((self.bounds.x, self.bounds.y + self.bulletSpawnLocation), self.bulletSize, self.bullet,
                        self.isRight))
             self.bulletReload = True
         for bullet in self.bullets:
             if not bullet.out:
-                bullet.propell(objects, screen)
+                bullet.propell(objects, characters, screen)
                 bullet.drawActor(screen)
             else:
                 del bullet
-
-

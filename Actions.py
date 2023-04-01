@@ -21,7 +21,8 @@ class Actions:
                          "walkArmed": 1,
                          "idleShoot": 2,
                          "jumpShoot": 2,
-                         "walkShoot": 3}
+                         "walkShoot": 3,
+                         "dead": 4}
 
         playerShipActions = {"landedOFF": 0,
                              "airOFF": 1,

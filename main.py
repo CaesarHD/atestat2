@@ -41,9 +41,19 @@ staticBackground = Background((0, 0), 2, resourceProvider.getResource("lvl1Stati
 dinamicBackgorund = Background((0, 0), 2, resourceProvider.getResource("lvl1DinamicBackground"))
 ground = Ground((0, 0), 2, resourceProvider.getResource("lvl1Ground"))
 
-player = Character((500, 100), 2, resourceProvider.getResource("player"), 20)
+player = Character((500, 100), 2, resourceProvider.getResource("player"), 5, 42)
 playerShip = Actor((0, 0), 1.5, resourceProvider.getResource("playerShip"))
-enemy = Enemy((200, 100), 2, resourceProvider.getResource("rubinEnemy"), 30)
+enemy1 = Enemy((0, 100), 2, resourceProvider.getResource("rubinEnemy"), 3.5, 30)
+enemy2 = Enemy((1000, 100), 2, resourceProvider.getResource("rubinEnemy"), 3.5, 30)
+enemy3 = Enemy((5000, 100), 2, resourceProvider.getResource("rubinEnemy"), 3.5, 30)
+enemy4 = Enemy((10000, 100), 2, resourceProvider.getResource("rubinEnemy"), 3.5, 30)
+
+rubinEnemies = []
+
+rubinEnemies.append(enemy1)
+rubinEnemies.append(enemy2)
+rubinEnemies.append(enemy3)
+rubinEnemies.append(enemy4)
 
 playerShip.action = 0
 
@@ -52,6 +62,11 @@ scroll = 0
 playerShip.bounds.bottom = ground.bounds.top
 i = 0
 player.action = 15
+
+objects = [playerShip]
+
+playerOpponents = rubinEnemies
+enemyOpponents = [player]
 
 running = True
 
@@ -65,7 +80,7 @@ def main():
 
         drawEnvironment(scroll)
 
-        if not player.isDead:
+        if not player.isShot:
             tickGame()
         else:
             gameOver()
@@ -93,11 +108,13 @@ def gameOver():
     if currentTime - lastUpdate > player.animationCooldown:
         if player.frame != 5:
             player.tickAnimation()
-        enemy.tickAnimation()
-        lastUpdate = currentTime
+        for enemy in rubinEnemies:
+            enemy.tickAnimation()
+            lastUpdate = currentTime
     player.die()
     player.drawActor(screen)
-    enemy.drawActor(screen)
+    for enemy in rubinEnemies:
+        enemy.drawActor(screen)
 
 
 def tickGame():
@@ -108,37 +125,52 @@ def tickGame():
     walkInPlace()
     updateActorsAnimation()
     handleInputEvent()
-
     drawCharacters()
+    print(player.bulletsReceived)
 
 
 def drawCharacters():
-    player.gravity(ground)
-    enemy.gravity(ground)
-    enemy.moving(player)
-    player.jump()
-    enemy.drawActor(screen)
-    player.drawActor(screen)
-    player.updateBullet(enemy, screen)
-    enemy.updateBullet(player, screen)
 
+    for enemy in rubinEnemies:
+        if not enemy.isShot:
+            enemy.gravity(ground)
+            enemy.moving(player)
+            enemy.drawActor(screen)
+            enemy.updateBullet(objects, enemyOpponents, screen)
+        else:
+            enemy.die()
+            if not enemy.isDead:
+                enemy.drawActor(screen)
+            else:
+                rubinEnemies.remove(enemy)
+                del enemy
+                if player.bulletsReceived < player.bulletsReceived:
+                    player.bulletsReceived = player.bulletsReceived + 1
+
+    player.gravity(ground)
+    player.jump()
+    player.drawActor(screen)
+    player.updateBullet(objects, playerOpponents, screen)
 
 def updateActorsAnimation():
     global lastUpdate
     currentTime = pygame.time.get_ticks()
     if currentTime - lastUpdate > player.animationCooldown:
         player.tickAnimation()
-        enemy.tickAnimation()
+        for enemy in rubinEnemies:
+            enemy.tickAnimation()
         lastUpdate = currentTime
 
 
 def walkInPlace():
     if player.walkInPlaceLeft:
         playerShip.scrolling(8)
-        enemy.scrolling(8)
+        for enemy in rubinEnemies:
+            enemy.scrolling(8)
     if player.walkInPlaceRight:
         playerShip.scrolling(-8)
-        enemy.scrolling(-8)
+        for enemy in rubinEnemies:
+            enemy.scrolling(-8)
 
 
 def handleInputEvent():
@@ -155,7 +187,7 @@ def handleInputEvent():
 
     key = pygame.key.get_pressed()
     if key[pygame.K_p]:
-        player.isDead = True
+        player.isShot = True
     if key[pygame.K_SPACE]:
         player.toggleShooting()
     if key[pygame.K_a]:
