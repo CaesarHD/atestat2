@@ -21,7 +21,7 @@ class Actor:
         self.animationListFlip = 0
         self.animationSteps = resource.animationFrames
         self.action = 0
-        self.animationCooldown = 120
+        self.animationCooldown = 90
         self.frame = 0
         self.stepCounter = 0
         self.scroll = 0

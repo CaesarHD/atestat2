@@ -6,15 +6,17 @@ PLAYER_DISTANCE = 200
 
 
 class Enemy(Character):
-    def __init__(self, pos, scale, resource):
-        super().__init__(pos, scale, resource)
+    def __init__(self, pos, scale, resource, bulletSize, bulletSpawnLocation):
+        super().__init__(pos, scale, resource, bulletSize, bulletSpawnLocation)
         self.isShooting = False
         self.isJumping = False
         self.isArmed = True
         self.isPreJumping = False
         self.isLanding = False
         self.velocity = 6
-
+        self.isShot = False
+        self.isDead = False
+        self.bulletsReceived = 2
 
     def fall(self):
         self.gravityForce += 1.5
@@ -32,8 +34,10 @@ class Enemy(Character):
 
     def moving(self, player):
         if self.isCloseTo(player):
+            self.isIdle = True
             self.action = self.actions["idleShoot"]
             self.isShooting = True
+            self.shoot()
             self.changeOrientation(player)
         else:
             self.isShooting = False
