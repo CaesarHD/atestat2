@@ -90,12 +90,12 @@ def generateEnemy(pos):
 def drawEnvironment(scroll):
 
     staticBackground.drawActor(screen)
-    # dinamicBackgorund.scrolling(screen, scroll)
-    # ground.scrolling(screen, scroll)
-    # playerShip.drawActor(screen)
+    dinamicBackgorund.scrolling(screen, scroll)
+    ground.scrolling(screen, scroll)
+    playerShip.drawActor(screen)
 
 def scrollActors(scroll, actors):
-    if not player.atBorders():
+    if not player.atRightBorders() and not player.atLeftBorders():
         for actor in actors:
             actor.scrolling(scroll)
 
@@ -213,13 +213,19 @@ def handleInputEvent():
     if key[pygame.K_a]:
         player.moveLeft()
         if player.toggleScrollBackgroundLeft():
-            scroll -= SCROLLING_SPEED
-            player.walkInPlaceLeft = True
+            if not player.atLeftBorders():
+                scroll -= SCROLLING_SPEED
+                player.walkInPlaceLeft = True
+            else:
+                player.walkInPlaceLeft = False
     elif key[pygame.K_d]:
         player.moveRight()
         if player.toggleScrollBackgroundRight():
-            scroll += SCROLLING_SPEED
-            player.walkInPlaceRight = True
+            if not player.atRightBorders():
+                scroll += SCROLLING_SPEED
+                player.walkInPlaceRight = True
+            else:
+                player.walkInPlaceRight = False
     else:
         player.inIdle()
 

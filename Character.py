@@ -12,8 +12,9 @@ LEFT_SCROLL_BOUNDARY = 400
 GROUND = 420
 JUMP_HEIGHT = 150
 GFORCE = 10
-RIGHT_MAP_BORDER =20000
+RIGHT_MAP_BORDER = 1138*19
 LEFT_MAP_BORDER = 0
+SCREEN_WIDTH = 800*1.42
 
 
 class Character(Actor):
@@ -127,7 +128,7 @@ class Character(Actor):
                 self.action = self.actions["walkArmed"]
         if self.isShooting:
             self.shoot()
-        if self.bounds.x > LEFT_MAP_BORDER:
+        if self.distanceTraveled > LEFT_MAP_BORDER:
             if not self.walkInPlaceLeft:
                 initial = self.bounds.topleft
                 self.bounds.topleft = (initial[0] - self.velocity, initial[1])
@@ -145,7 +146,7 @@ class Character(Actor):
                 self.action = self.actions["walkArmed"]
         if self.isShooting:
             self.shoot()
-        if self.bounds.x < RIGHT_MAP_BORDER:
+        if self.distanceTraveled < RIGHT_MAP_BORDER + (SCREEN_WIDTH - RIGHT_SCROLL_BOUNDARY) - self.bounds.size[1]:
             if not self.walkInPlaceRight:
                 initial = self.bounds.topleft
                 self.bounds.topleft = (initial[0] + self.velocity, initial[1])
@@ -211,7 +212,7 @@ class Character(Actor):
         return self.bounds.x >= RIGHT_SCROLL_BOUNDARY
 
     def toggleScrollBackgroundLeft(self):
-        return self.bounds.x <= LEFT_SCROLL_BOUNDARY and not self.atBorders()
+        return self.bounds.x <= LEFT_SCROLL_BOUNDARY
 
     def updateBullet(self, objects, characters, screen):
         if self.isShooting and not self.bulletReload:
@@ -235,5 +236,9 @@ class Character(Actor):
             if self.frame == self.deathLastFrame:
                 self.isDead = True
 
-    def atBorders(self):
-        return abs(self.distanceTraveled - LEFT_MAP_BORDER) < 2 or abs(self.distanceTraveled - RIGHT_SCROLL_BOUNDARY) < 2
+    def atLeftBorders(self):
+        return self.distanceTraveled <= LEFT_SCROLL_BOUNDARY
+
+    def atRightBorders(self):
+        return RIGHT_MAP_BORDER - self.distanceTraveled < 1
+
