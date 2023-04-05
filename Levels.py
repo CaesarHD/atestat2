@@ -1,30 +1,42 @@
 from Actions import Actions
 from ResourceProvider import ResourceProvider
+from Storage import Storage
 
 
 class Levels:
     def __init__(self):
         self.levels = []
         self.resourcesLvl1 = {}
-
-        self.resourceProvider = ResourceProvider()
+        self.numberOfFrames = []
         self.action = Actions()
+        self.storage = Storage()
+        self.resourceProvider = self.storage.getResource()
 
-        rubinEnemy = self.resourceProvider.registerResource("rubinEnemy", 'Images/ENEMY_FRAMES/spritesheet.png', [6, 4, 3, 4], (57, 57), self.action.getActions("rubinEnemy"))
-        player = self.resourceProvider.registerResource("player", 'Images/ALIEN_FRAMES/spritesheet.png', [4, 6, 3, 1, 2, 4, 6, 3, 1, 2, 3, 6, 2, 3], (57, 57), self.action.getActions("player"))
-        playerShip = self.resourceProvider.registerResource("playerShip", 'Images/Alien_Ship/spritesheet.png', [1, 1, 1, 1], (440, 440), self.action.getActions("playerShip"))
-        frontBackground = self.resourceProvider.registerResource("lvl1BG", 'Images/Backgrounds/LVL1/dinamicSpritesheet.png', [1, 1, 1], (1138, 320), None)
-        behindBackground = self.resourceProvider.registerResource("lvl1BG_behind", 'Images/Backgrounds/LVL1/staticSpritesheet.png', [4], (569, 320), None)
-        ground = self.resourceProvider.registerResource("lvl1Ground", 'Images/Backgrounds/LVL1/ground.png', [1], (1138, 38), None)
+    def loadResourcesLevel1(self):
+        self.resourceProvider.registerResource("rubinEnemy", self.storage.rubinEnemySpriteSheet,
+                                               self.storage.rubinEnemyAnimationFrames, self.storage.rubinEnemyFrameSize,
+                                               self.action.getActions("rubinEnemy"),
+                                               self.storage.rubinBullet)
+        self.resourceProvider.registerResource("player", self.storage.playerSpritesheet,
+                                               self.storage.playerAnimationFrames, self.storage.playerFrameSize,
+                                               self.action.getActions("player"), self.storage.playerBullet)
+        self.resourceProvider.registerResource("playerShip", self.storage.playerShipSpriteSheet,
+                                               self.storage.playerShipAnimationFrames,
+                                               self.storage.playerShipFrameSize, self.action.getActions("playerShip"),
+                                               None)
+        self.resourceProvider.registerResource("lvl1Ground", self.storage.groundSpritesheet, [1],
+                                               self.storage.lvl1GroundSize, None, None)
+        self.resourceProvider.registerResource("lvl1StaticBackground", self.storage.staticBackgroundSpritesheet, [1],
+                                               self.storage.staticBackgroundSize, None, None)
+        self.resourceProvider.registerResource("lvl1DinamicBackground", self.storage.dinamicBackgroundSpritesheet,
+                                               self.storage.dinamicBackgroundAnimationFrames,
+                                               self.storage.dinamicBackgroundSize, None, None)
+        self.resourceProvider.registerResource("guardian", self.storage.guardianSpritesheet,
+                                               self.storage.guardianAnimationFrames, self.storage.guardianFrameSize,
+                                               self.action.getActions("guardian"), self.storage.guardianBullet)
 
-        self.resourcesLvl1 = {
-            "rubinEnemy": rubinEnemy,
-            "player": player,
-            "playerShip": playerShip,
-            "frontBackground": frontBackground,
-            "behindBackground": behindBackground,
-            "ground": ground
-        }
-    def getLevelResource(self, level, actor):
-        level -= 1
-        return self.resourcesLvl1[actor].getResource
+    def loadResourcesLevel(self, level):
+        match level:
+            case 1:
+                self.loadResourcesLevel1()
+        return self.resourceProvider

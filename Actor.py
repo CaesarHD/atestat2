@@ -2,7 +2,6 @@ from pygame import Rect
 import pygame
 
 GFORCE = 2
-PLAYER_DISTANCE = 200
 SPEED = 2
 
 class Actor:
@@ -79,6 +78,6 @@ class Actor:
         initial = self.bounds.topleft
         self.bounds.topleft = (initial[0], initial[1] + velocity)
 
-    def isCloseTo(self, actor):
-        return abs(self.bounds.topleft[0] - actor.bounds.topleft[0]) < PLAYER_DISTANCE
+    def isCloseTo(self, actor, distance):
+        return abs(self.bounds.topleft[0] - actor.bounds.topleft[0]) < distance
 
