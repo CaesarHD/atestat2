@@ -95,7 +95,6 @@ def drawEnvironment(scroll):
     playerShip.drawActor(screen)
 
 def scrollActors(scroll, actors):
-    if not player.atRightBorders() and not player.atLeftBorders():
         for actor in actors:
             actor.scrolling(scroll)
 
@@ -166,7 +165,7 @@ def drawCharacters():
     player.drawActor(screen)
     player.updateBullet(objects, playerOpponents, screen)
 
-    print(player.distanceTraveled)
+    # print(player.distanceTraveled)
 
 
 
@@ -190,8 +189,7 @@ def walkInPlace():
     if player.walkInPlaceRight:
         for enemy in rubinEnemies:
             enemy.scrolling(-offset)
-            scrollActors(-offset, actors)
-
+        scrollActors(-offset, actors)
 
 def handleInputEvent():
     global running, scroll
@@ -211,21 +209,23 @@ def handleInputEvent():
     if key[pygame.K_SPACE]:
         player.toggleShooting()
     if key[pygame.K_a]:
-        player.moveLeft()
+        player.walkInPlaceRight = False
         if player.toggleScrollBackgroundLeft():
-            if not player.atLeftBorders():
-                scroll -= SCROLLING_SPEED
-                player.walkInPlaceLeft = True
-            else:
-                player.walkInPlaceLeft = False
+            scroll -= SCROLLING_SPEED
+            player.walkInPlaceLeft = True
+            player.distanceTraveled -= SCROLLING_SPEED
+        else:
+            player.walkInPlaceLeft = False
+        player.moveLeft()
     elif key[pygame.K_d]:
-        player.moveRight()
+        player.walkInPlaceLeft = False
         if player.toggleScrollBackgroundRight():
-            if not player.atRightBorders():
-                scroll += SCROLLING_SPEED
-                player.walkInPlaceRight = True
-            else:
-                player.walkInPlaceRight = False
+            scroll += SCROLLING_SPEED
+            player.walkInPlaceRight = True
+            player.distanceTraveled += SCROLLING_SPEED
+        else:
+            player.walkInPlaceRight = False
+        player.moveRight()
     else:
         player.inIdle()
 

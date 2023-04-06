@@ -12,9 +12,10 @@ LEFT_SCROLL_BOUNDARY = 400
 GROUND = 420
 JUMP_HEIGHT = 150
 GFORCE = 10
-RIGHT_MAP_BORDER = 1138*19
+RIGHT_MAP_BORDER = 1138*10
 LEFT_MAP_BORDER = 0
 SCREEN_WIDTH = 800*1.42
+PLAYER_OFFSET = 4
 
 
 class Character(Actor):
@@ -41,7 +42,7 @@ class Character(Actor):
         self.bulletsReceived = 7
         self.animationFrames = resource.animationFrames
         self.deathLastFrame = self.animationFrames[len(self.animationFrames) - 1] - 1
-        self.distanceTraveled = self.bounds.x
+        self.distanceTraveled = 0
 
     def fall(self):
         self.isIdle = False
@@ -117,7 +118,6 @@ class Character(Actor):
                     self.bulletReload = False
 
     def moveLeft(self):
-        self.walkInPlaceRight = False
         self.isLeft = True
         self.isRight = False
         self.isIdle = False
@@ -128,14 +128,11 @@ class Character(Actor):
                 self.action = self.actions["walkArmed"]
         if self.isShooting:
             self.shoot()
-        if self.distanceTraveled > LEFT_MAP_BORDER:
-            if not self.walkInPlaceLeft:
-                initial = self.bounds.topleft
-                self.bounds.topleft = (initial[0] - self.velocity, initial[1])
-            self.distanceTraveled = self.distanceTraveled - self.velocity
+        if not self.walkInPlaceLeft and not self.bounds.x <= LEFT_MAP_BORDER:
+            initial = self.bounds.topleft
+            self.bounds.topleft = (initial[0] - self.velocity, initial[1])
 
     def moveRight(self):
-        self.walkInPlaceLeft = False
         self.isIdle = False
         self.isRight = True
         self.isLeft = False
@@ -146,11 +143,9 @@ class Character(Actor):
                 self.action = self.actions["walkArmed"]
         if self.isShooting:
             self.shoot()
-        if self.distanceTraveled < RIGHT_MAP_BORDER + (SCREEN_WIDTH - RIGHT_SCROLL_BOUNDARY) - self.bounds.size[1]:
-            if not self.walkInPlaceRight:
-                initial = self.bounds.topleft
-                self.bounds.topleft = (initial[0] + self.velocity, initial[1])
-            self.distanceTraveled = self.distanceTraveled + self.velocity
+        if not self.walkInPlaceRight and not self.bounds.x >= (SCREEN_WIDTH - self.bounds.size[1]):
+            initial = self.bounds.topleft
+            self.bounds.topleft = (initial[0] + self.velocity, initial[1])
 
 
     def inIdle(self):
@@ -209,10 +204,10 @@ class Character(Actor):
             self.isShooting = True
 
     def toggleScrollBackgroundRight(self):
-        return self.bounds.x >= RIGHT_SCROLL_BOUNDARY
+        return self.bounds.x >= RIGHT_SCROLL_BOUNDARY and self.distanceTraveled < (RIGHT_MAP_BORDER - RIGHT_SCROLL_BOUNDARY - self.bounds.size[1])
 
     def toggleScrollBackgroundLeft(self):
-        return self.bounds.x <= LEFT_SCROLL_BOUNDARY
+        return self.bounds.x <= LEFT_SCROLL_BOUNDARY and self.distanceTraveled > 0
 
     def updateBullet(self, objects, characters, screen):
         if self.isShooting and not self.bulletReload:
@@ -235,10 +230,3 @@ class Character(Actor):
         if not self.isDead:
             if self.frame == self.deathLastFrame:
                 self.isDead = True
-
-    def atLeftBorders(self):
-        return self.distanceTraveled <= LEFT_SCROLL_BOUNDARY
-
-    def atRightBorders(self):
-        return RIGHT_MAP_BORDER - self.distanceTraveled < 1
-
