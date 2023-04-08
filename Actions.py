@@ -15,8 +15,9 @@ class Actions:
                          "preJumpShoot": 12,
                          "jumpShoot": 13,
                          "landingShoot": 14,
-                         "dead": 15,
-                         "deadInAir": 16}
+                         "placingMine": 15,
+                         "dead": 16,
+                         "deadInAir": 17}
 
         guardianActions = {"idle": 0,
                          "walk": 0,

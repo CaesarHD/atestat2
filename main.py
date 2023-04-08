@@ -8,7 +8,7 @@ from Background import Background
 from Enemy import Enemy
 from Character import Character
 from Ground import Ground
-from Images.ALIEN_FRAMES.Guardian import Guardian
+from Guardian import Guardian
 from Levels import Levels
 from ResourceProvider import ResourceProvider
 from Screen import Screen
