@@ -1,4 +1,5 @@
 from Bullet import Bullet
+from Mine import Mine
 from ResourceProvider import ResourceProvider
 import pygame
 from pygame import Rect
@@ -43,6 +44,7 @@ class Character(Actor):
         self.animationFrames = resource.animationFrames
         self.deathLastFrame = self.animationFrames[len(self.animationFrames) - 1] - 1
         self.distanceTraveled = 0
+        # self.mine = Mine()
 
     def fall(self):
         self.isIdle = False
@@ -230,3 +232,8 @@ class Character(Actor):
         if not self.isDead:
             if self.frame == self.deathLastFrame:
                 self.isDead = True
+    
+    def placingMine(self):
+        self.action = self.actions["placingMine"]
+
+

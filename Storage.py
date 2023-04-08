@@ -25,7 +25,7 @@ class Storage:
         self.playerBullet = self.resourceProvider.getResource("playerBullet")
         self.rubinBullet = self.resourceProvider.getResource("rubinBullet")
 
-        self.playerAnimationFrames = [4, 6, 3, 1, 2, 4, 6, 3, 1, 2, 3, 6, 2, 3, 1, 5, 7, 7]
+        self.playerAnimationFrames = [4, 6, 3, 1, 2, 4, 6, 3, 1, 2, 3, 6, 2, 3, 1, 6, 7, 7]
         self.playerFrameSize = (57, 57)
         self.rubinEnemySpriteSheet = 'Images/ENEMY_FRAMES/spritesheet.png'
         self.rubinEnemyAnimationFrames = [6, 4, 3, 4, 6]
