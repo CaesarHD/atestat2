@@ -208,6 +208,8 @@ def handleInputEvent():
         player.isShot = True
     if key[pygame.K_SPACE]:
         player.toggleShooting()
+    if key[pygame.K_e]:
+        player.placingMine()
     if key[pygame.K_a]:
         player.walkInPlaceRight = False
         if player.toggleScrollBackgroundLeft():

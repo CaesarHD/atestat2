@@ -234,6 +234,7 @@ class Character(Actor):
                 self.isDead = True
     
     def placingMine(self):
+        self.isIdle = False
         self.action = self.actions["placingMine"]
 
 
