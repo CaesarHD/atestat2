@@ -1,17 +1,28 @@
 from Actor import Actor
 
+MIDDLE_MINE_COORD = 10.5
 
 class Mine(Actor):
     def __init__(self, pos, scale, resource):
         super().__init__(pos, scale, resource)
         self.isActive = False
         self.isTriggered = False
+        self.resource = resource
 
-def trigger(self, actor):
-    if self.isActive:
-        if actor.bounds.x > self.boumds.x and actor.bounds.x < self.bounds.x:
-            self.isTriggered = True
+    def active(self, player):
+        if not self.isActive:
+            if not player.isCollideWith(self):
+                self.isActive = True
+                
+    def trigger(self, player, actors):
+        if self.isActive:
+            for actor in actors:
+                if actor.isCollideWith(self):
+                    self.isTriggered = True
+                    actor.isShot = True
+            if player.isCollideWith(self):
+                self.isTriggered = True
+                player.isShot = True
 
-def exploding(self):
-    if self.isTriggered:
-        pass
+    def getExplosionCoord(self):
+        return (self.bounds.x - 70, self.bounds.y - 92*2)

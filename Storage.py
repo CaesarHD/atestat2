@@ -5,25 +5,29 @@ class Storage:
     def __init__(self):
         self.resourceProvider = ResourceProvider()
 
-        self.playerBulletFrame = (28, 5)
-        self.rubinEnemyBulletFrame = (28, 5)
+        self.playerBulletSize = (28, 5)
+        self.rubinEnemyBulletSize = (28, 5)
+        self.mineSize = (21, 6)
 
         self.playerBulletSpriteSheet = 'Images/Bullet/player_bullet.png'
         self.rubinBulletSpriteSheet = 'Images/Bullet/enemy_bullet.png'
         self.guardianBulletSpriteSheet = 'Images/Bullet/player_bullet.png'
+        self.mineSpritesheet = 'Images\Levels\LEVEL_1\MINE_BASIC_SP1.png'
 
         self.resourceProvider.registerResource("playerBullet", self.playerBulletSpriteSheet, [1],
-                                               self.playerBulletFrame, None,
-                                               None)
+                                               self.playerBulletSize, None,
+                                               None, None)
         self.resourceProvider.registerResource("rubinBullet", self.rubinBulletSpriteSheet, [1],
-                                               self.rubinEnemyBulletFrame, None,
-                                               None)
+                                               self.rubinEnemyBulletSize, None,
+                                               None, None)
         self.resourceProvider.registerResource("guardianBullet", self.guardianBulletSpriteSheet, [1],
-                                               self.rubinEnemyBulletFrame, None,
-                                               None)
+                                               self.playerBulletSize, None,
+                                               None, None)
+        self.resourceProvider.registerResource('mine', self.mineSpritesheet, [1], self.mineSize, None, None, None)
         self.guardianBullet = self.resourceProvider.getResource("guardianBullet")
         self.playerBullet = self.resourceProvider.getResource("playerBullet")
         self.rubinBullet = self.resourceProvider.getResource("rubinBullet")
+        self.mine = self.resourceProvider.getResource('mine')
 
         self.playerAnimationFrames = [4, 6, 3, 1, 2, 4, 6, 3, 1, 2, 3, 6, 2, 3, 1, 6, 7, 7]
         self.playerFrameSize = (57, 57)
@@ -44,8 +48,8 @@ class Storage:
         self.guardianSpritesheet = 'Images/Levels/LEVEL_1/guardian.png'
         self.guardianAnimationFrames = [4, 3]
         self.guardianFrameSize = (57, 57)
-        self.mineSpritesheet = 'Images\Levels\LEVEL_1\MINE_BASIC_SP1.png'
-        self.mineSize = ()
+        self.mineExplosionSpritesheet = 'Images\Levels\LEVEL_1\mine_explosion_spritesheet.png'
+        self.mineExplosionSize = (100, 92)
 
     def getResource(self):
         return self.resourceProvider

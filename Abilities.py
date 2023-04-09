@@ -1,8 +1,14 @@
+from Levels import Levels
+from Mine import Mine
+
+
 class Abilities:
     def __init__(self, actor):
         self.getPotion = actor.getPotion
-        self.placingMine = actor.placingMine
         self.actor = actor
+        self.mines = []
+        self.level = Levels()
+        self.resourceProvider = self.level.loadResourcesLevel(1)
 
     def setStatus(self):
         self.getPotion = self.actor.getPotion
