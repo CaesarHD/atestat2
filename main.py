@@ -8,7 +8,7 @@ from Background import Background
 from Enemy import Enemy
 from Character import Character
 from Ground import Ground
-from Images.ALIEN_FRAMES.Guardian import Guardian
+from Guardian import Guardian
 from Levels import Levels
 from ResourceProvider import ResourceProvider
 from Screen import Screen
@@ -41,6 +41,9 @@ ground = Ground((0, 0), 2, resourceProvider.getResource("lvl1Ground"))
 player = Character((0, 100), 2, resourceProvider.getResource("player"), 5, 42)
 playerShip = Actor((0, 0), 1.5, resourceProvider.getResource("playerShip"))
 
+mines = []
+explosions = []
+
 rubinEnemies = []
 pos = 2000
 rubinEnemies.append(Enemy((pos, 100), RUBIN_ENEMY_SIZE, resourceProvider.getResource("rubinEnemy"), RUBIN_ENEMY_BULLET_SIZE, RUBIN_ENEMY_BULLET_SPAWN_LOCATION))
@@ -57,6 +60,8 @@ guardian = Guardian((1000, 100), 2, resourceProvider.getResource("guardian"), 5,
 actors = []
 actors.append(guardian)
 actors.append(playerShip)
+
+mines = player.mines
 
 objects = [playerShip]
 
@@ -87,6 +92,9 @@ def main():
 def generateEnemy(pos):
     rubinEnemies.append(Enemy((pos, 100), RUBIN_ENEMY_SIZE, resourceProvider.getResource("rubinEnemy"), RUBIN_ENEMY_BULLET_SIZE, RUBIN_ENEMY_BULLET_SPAWN_LOCATION))
 
+def generateExplosion(pos):
+    explosions.append(Actor(pos, 2, resourceProvider.getResource('mineExplosion')))
+
 def drawEnvironment(scroll):
 
     staticBackground.drawActor(screen)
@@ -95,8 +103,14 @@ def drawEnvironment(scroll):
     playerShip.drawActor(screen)
 
 def scrollActors(scroll, actors):
-        for actor in actors:
-            actor.scrolling(scroll)
+    for actor in actors:
+        actor.scrolling(scroll)
+
+    for mine in mines:
+        mine.scrolling(scroll)
+
+    for explosion in explosions:
+        explosion. scrolling(scroll)
 
 def gameOver():
     global running
@@ -119,6 +133,8 @@ def gameOver():
         enemy.moving(player)
         enemy.drawActor(screen)
     guardian.drawActor(screen)
+    for mine in mines:
+        mine.drawActor(screen)
 
 
 def tickGame():
@@ -130,8 +146,6 @@ def tickGame():
     handleInputEvent()
     drawCharacters()
     walkInPlace()
-
-
 
 def drawCharacters():
 
@@ -148,7 +162,6 @@ def drawCharacters():
             if not enemy.isDead:
                 enemy.drawActor(screen)
             else:
-                # pos = pos
                 generateEnemy(pos)
                 rubinEnemies.remove(enemy)
                 del enemy
@@ -164,10 +177,31 @@ def drawCharacters():
     player.jump()
     player.drawActor(screen)
     player.updateBullet(objects, playerOpponents, screen)
+    player.placingMine()
+    player.drawMine(screen)
+    mineExplosion()
+    drawExplosion()
+    
+def drawExplosion():
+    for explosion in explosions:
+        explosion.drawActor(screen)
+        if explosion.frame == 5:
+            explosions.remove(explosion)
+            del explosion
 
-    # print(player.distanceTraveled)
 
+def mineToggleExplosion(mine):
+    mine.active(player)
+    mine.trigger(player, rubinEnemies)
 
+def mineExplosion():
+    for mine in  mines:
+        mineToggleExplosion(mine)
+        if mine.isTriggered:
+            pos = mine.getExplosionCoord()
+            generateExplosion(pos)
+            mines.remove(mine)
+            del mine
 
 def updateActorsAnimation():
     global lastUpdate
@@ -177,6 +211,8 @@ def updateActorsAnimation():
         guardian.tickAnimation()
         for enemy in rubinEnemies:
             enemy.tickAnimation()
+        for explosion in explosions:
+            explosion.tickAnimation()
         lastUpdate = currentTime
 
 
@@ -202,6 +238,8 @@ def handleInputEvent():
                     player.toggleWeapon()
                 case pygame.K_w:
                     player.toggleJump()
+                case pygame.K_e:
+                    player.toggleAbility()
 
     key = pygame.key.get_pressed()
     if key[pygame.K_p]:
