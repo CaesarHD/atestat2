@@ -195,7 +195,7 @@ def mineToggleExplosion(mine):
     mine.trigger(player, rubinEnemies)
 
 def mineExplosion():
-    for mine in  mines:
+    for mine in mines:
         mineToggleExplosion(mine)
         if mine.isTriggered:
             pos = mine.getExplosionCoord()

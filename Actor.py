@@ -33,8 +33,8 @@ class Actor:
             self.animationList.append(tempImageList)
 
     def tickAnimation(self):
-        self.frame += 1
         self.resetAnimation()
+        self.frame += 1
 
     def resetAnimation(self):
         if self.frame >= len(self.animationList[self.action]):

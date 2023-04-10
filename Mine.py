@@ -2,6 +2,7 @@ from Actor import Actor
 
 MIDDLE_MINE_COORD = 10.5
 
+
 class Mine(Actor):
     def __init__(self, pos, scale, resource):
         super().__init__(pos, scale, resource)
@@ -13,7 +14,7 @@ class Mine(Actor):
         if not self.isActive:
             if not player.isCollideWith(self):
                 self.isActive = True
-                
+
     def trigger(self, player, actors):
         if self.isActive:
             for actor in actors:
@@ -25,4 +26,4 @@ class Mine(Actor):
                 player.isShot = True
 
     def getExplosionCoord(self):
-        return (self.bounds.x - 70, self.bounds.y - 92*2)
+        return self.bounds.x - 75, self.bounds.y - 92 * 2

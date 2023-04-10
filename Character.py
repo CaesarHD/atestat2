@@ -244,7 +244,10 @@ class Character(Actor):
                 self.isDead = True
 
     def generateMine(self):
-        pos = (self.bounds.x + 27, self.bounds.bottom - 12)
+        if self.isLeft:
+            pos = (self.bounds.x + 21, self.bounds.bottom - 12)
+        else:
+            pos = (self.bounds.x + 51, self.bounds.bottom - 12)
         self.mines.append(Mine(pos, 2, self.mine))
     
     def placingMine(self):
