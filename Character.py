@@ -18,9 +18,7 @@ LEFT_MAP_BORDER = 0
 SCREEN_WIDTH = 800*1.42
 PLAYER_OFFSET = 4
 
-
 class Character(Actor):
-
     def __init__(self, pos, scale, resource, bulletSize, bulletSpawnLocation):
         super().__init__(pos, scale, resource)
         self.preJumpPosition = GROUND
@@ -45,8 +43,11 @@ class Character(Actor):
         self.deathLastFrame = self.animationFrames[len(self.animationFrames) - 1] - 1
         self.distanceTraveled = 0
         self.useAbility = False
+        self.abilityOn = False
         self.mines = []
         self.mine = resource.mine
+        self.abilityCooldown = 25000
+        self.abilityLastUpdate = 0
 
     def fall(self):
         self.isIdle = False
@@ -217,8 +218,15 @@ class Character(Actor):
     def toggleScrollBackgroundLeft(self):
         return self.bounds.x <= LEFT_SCROLL_BOUNDARY and self.distanceTraveled > 0 and not self.useAbility
     
+    def abilityTimer(self):
+        if not self.abilityOn:
+            currentTime = pygame.time.get_ticks()
+            if currentTime - self.abilityLastUpdate > self.abilityCooldown:
+                self.abilityOn = True
+                self.abilityLastUpdate = currentTime
+
     def toggleAbility(self):
-        if not self.jump() and not self.isFalling and not self.useAbility:
+        if self.abilityOn and not self.jump() and not self.isFalling and not self.useAbility:
             self.useAbility = True
 
     def updateBullet(self, objects, characters, screen):
@@ -257,6 +265,7 @@ class Character(Actor):
                 self.generateMine()
             if self.frame == 5:
                 self.useAbility = False
+                self.abilityOn = False
     
     def drawMine(self, screen):
         for mine in self.mines:

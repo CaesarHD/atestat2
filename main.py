@@ -126,7 +126,7 @@ def gameOver():
         for enemy in rubinEnemies:
             enemy.tickAnimation()
             guardian.tickAnimation()
-            lastUpdate = currentTime
+        lastUpdate = currentTime
     player.die()
     player.drawActor(screen)
     for enemy in rubinEnemies:
@@ -146,6 +146,7 @@ def tickGame():
     handleInputEvent()
     drawCharacters()
     walkInPlace()
+    player.abilityTimer()
 
 def drawCharacters():
 
