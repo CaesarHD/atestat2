@@ -37,6 +37,15 @@ class Levels:
         self.resourceProvider.registerResource("mine", self.storage.mineSpritesheet, [1], self.storage.mineSize, None, None, None)
         self.resourceProvider.registerResource('mineExplosion', self.storage.mineExplosionSpritesheet, [9], self.storage.mineExplosionSize,
                                                None, None, None)
+        self.resourceProvider.registerResource("lifeBar", self.storage.lifeBarSpritesheet,
+                                               self.storage.lifeBarFrames, self.storage.lifeBarSize,
+                                               None, None, None)
+        self.resourceProvider.registerResource("mineIcon", self.storage.mineIconSpritesheet,
+                                               self.storage.mineIconFrames, self.storage.abilityIconSize,
+                                               self.action.getActions("playerAbility"), None, None)
+        self.resourceProvider.registerResource("gunIcon", self.storage.gunIconSpritesheet,
+                                               self.storage.gunIconFrames, self.storage.abilityIconSize,
+                                               self.action.getActions("playerGunStates"), None, None)
 
     def loadResourcesLevel(self, level):
         match level:

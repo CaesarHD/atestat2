@@ -38,7 +38,7 @@ class Character(Actor):
         self.bullet = resource.bullet
         self.bulletSpawnLocation = bulletSpawnLocation
         self.bulletSize = bulletSize
-        self.bulletsReceived = 7
+        self.bulletsReceived = 10
         self.animationFrames = resource.animationFrames
         self.deathLastFrame = self.animationFrames[len(self.animationFrames) - 1] - 1
         self.distanceTraveled = 0
