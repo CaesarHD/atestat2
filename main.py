@@ -11,8 +11,10 @@ from Ground import Ground
 from Guardian import Guardian
 from Levels import Levels
 from ResourceProvider import ResourceProvider
+from Scene import Scene
 from Screen import Screen
 from Spritesheet import Spritesheet
+from Icons import Icons
 from UI import UI
 
 # Press Shift+F10 to execute it or replace it with your code.
@@ -25,6 +27,7 @@ pygame.init()
 clock = pygame.time.Clock()
 screen = Screen(800 * 1.42, 480 * 1.33)
 level = Levels()
+scene = Scene()
 
 SCROLLING_SPEED = 4
 
@@ -45,6 +48,10 @@ mines = []
 explosions = []
 
 rubinEnemies = []
+rubinEnemies = scene.rubinEnemies
+
+ui = UI()
+
 pos = 2000
 rubinEnemies.append(
     Enemy((pos, 100), RUBIN_ENEMY_SIZE, resourceProvider.getResource("rubinEnemy"), RUBIN_ENEMY_BULLET_SIZE,
@@ -63,18 +70,10 @@ actors = [guardian, playerShip]
 
 mines = player.mines
 
-lifeBarPos = (20, 20)
-gunIconPos = (87, 112)
-mineIconPos = (140, 112)
-
-lifeBar = UI(lifeBarPos, 1.5, resourceProvider.getResource('lifeBar'))
-mineIcon = UI(mineIconPos, 1.5, resourceProvider.getResource('mineIcon'))
-gunIcon = UI(gunIconPos, 1.5, resourceProvider.getResource('gunIcon'))
-
 objects = [playerShip]
 
 playerOpponents = rubinEnemies
-enemyOpponents = [player]
+enemyOpponents = []
 
 running = True
 
@@ -82,15 +81,14 @@ running = True
 def main():
     global scroll
 
+    scene.generateEnemy()
+
     while running:
 
         clock.tick(60)
 
         drawEnvironment(scroll)
-        setStatus(mineIcon)
-        gunIconStatus()
-        lifeBar.lifeBarStages(player)
-        drawUI()
+        ui.renderUI(player, screen)
 
         if not player.isShot:
             tickGame()
@@ -99,12 +97,6 @@ def main():
         pygame.display.update()
 
     pygame.quit()
-
-
-def generateEnemy(pos):
-    rubinEnemies.append(
-        Enemy((pos, 100), RUBIN_ENEMY_SIZE, resourceProvider.getResource("rubinEnemy"), RUBIN_ENEMY_BULLET_SIZE,
-              RUBIN_ENEMY_BULLET_SPAWN_LOCATION))
 
 
 def generateExplosion(pos):
@@ -116,20 +108,6 @@ def drawEnvironment(scroll):
     dinamicBackgorund.scrolling(screen, scroll)
     ground.scrolling(screen, scroll)
     playerShip.drawActor(screen)
-
-
-def setStatus(abilityIcon):
-    abilityIcon.abilityChangeState(player)
-
-
-def gunIconStatus():
-    gunIcon.gunIconStatus(player)
-
-
-def drawUI():
-    lifeBar.drawActor(screen)
-    mineIcon.drawActor(screen)
-    gunIcon.drawActor(screen)
 
 
 def scrollActors(scroll, actors):
@@ -182,7 +160,6 @@ def tickGame():
 
 def drawCharacters():
     global pos
-
     for enemy in rubinEnemies:
         if not enemy.isShot:
             enemy.gravity(ground)
@@ -194,11 +171,10 @@ def drawCharacters():
             if not enemy.isDead:
                 enemy.drawActor(screen)
             else:
-                generateEnemy(pos)
                 rubinEnemies.remove(enemy)
                 del enemy
-                if player.bulletsReceived < player.bulletsReceived:
-                    player.bulletsReceived = player.bulletsReceived + 1
+                if player.bulletsReceived < 10:
+                    player.bulletsReceived = player.bulletsReceived + 2
 
     guardian.gravity(ground)
     guardian.drawActor(screen)
@@ -229,6 +205,7 @@ def mineToggleExplosion(mine):
 
 
 def mineExplosion():
+    global pos
     for mine in mines:
         mineToggleExplosion(mine)
         if mine.isTriggered:
@@ -278,8 +255,6 @@ def handleInputEvent():
                     player.toggleAbility()
 
     key = pygame.key.get_pressed()
-    # if key[pygame.K_p]:
-    #     player.isShot = True
     if key[pygame.K_SPACE]:
         player.toggleShooting()
     if key[pygame.K_a]:

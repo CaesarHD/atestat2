@@ -6,10 +6,12 @@ from Character import Character
 
 GROUND = 420
 GFORCE = 10
-IDLE_PLAYER_DISTANCE = 200
-WALK_PLAYER_DISTANCE = 800
+IDLE_ACTOR_DISTANCE = 200
+WALK_PLAYER_DISTANCE = 1000
+PLAYER_DISTANCE = 1200
 
 lastUpdate = 0
+
 
 class Enemy(Character):
     def __init__(self, pos, scale, resource, bulletSize, bulletSpawnLocation):
@@ -22,7 +24,7 @@ class Enemy(Character):
         self.velocity = 6
         self.isShot = False
         self.isDead = False
-        self.bulletsReceived = 5
+        self.bulletsReceived = 3
         self.idleShootTiming = 500
         self.movingShootTiming = 0
 
@@ -60,14 +62,22 @@ class Enemy(Character):
         else:
             self.moveLeft()
 
-
-
-
     def moving(self, player):
-        if self.isCloseTo(player, IDLE_PLAYER_DISTANCE):
-            if not self.isShooting:
-                self.tickShoot(self.idleShootTiming)
-            self.inIdle()
+        if self.bounds.x > player.bounds.x:
+            if self.isCloseTo(player, PLAYER_DISTANCE):
+                if self.isCloseTo(player, IDLE_ACTOR_DISTANCE):
+                    if not self.isShooting:
+                        self.tickShoot(self.idleShootTiming)
+                    self.inIdle()
+                else:
+                    self.shootAndMoving(player)
+                self.changeOrientation(player)
         else:
-            self.shootAndMoving(player)
-        self.changeOrientation(player)
+            if self.isCloseTo(player, IDLE_ACTOR_DISTANCE):
+                if not self.isShooting:
+                    self.tickShoot(self.idleShootTiming)
+                self.inIdle()
+            else:
+                self.shootAndMoving(player)
+            self.changeOrientation(player)
+

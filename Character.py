@@ -13,10 +13,11 @@ LEFT_SCROLL_BOUNDARY = 400
 GROUND = 420
 JUMP_HEIGHT = 150
 GFORCE = 10
-RIGHT_MAP_BORDER = 1138*10
+RIGHT_MAP_BORDER = 1138 * 10
 LEFT_MAP_BORDER = 0
-SCREEN_WIDTH = 800*1.42
+SCREEN_WIDTH = 800 * 1.42
 PLAYER_OFFSET = 4
+
 
 class Character(Actor):
     def __init__(self, pos, scale, resource, bulletSize, bulletSpawnLocation):
@@ -43,11 +44,12 @@ class Character(Actor):
         self.deathLastFrame = self.animationFrames[len(self.animationFrames) - 1] - 1
         self.distanceTraveled = 0
         self.useAbility = False
-        self.abilityOn = False
+        self.abilityOn = True
         self.mines = []
         self.mine = resource.mine
         self.abilityCooldown = 25000
         self.abilityLastUpdate = 0
+        self.actionChanged = False
 
     def fall(self):
         self.isIdle = False
@@ -155,7 +157,6 @@ class Character(Actor):
                 initial = self.bounds.topleft
                 self.bounds.topleft = (initial[0] + self.velocity, initial[1])
 
-
     def inIdle(self):
         if not self.useAbility:
             self.walkInPlaceRight = False
@@ -213,11 +214,12 @@ class Character(Actor):
             self.isShooting = True
 
     def toggleScrollBackgroundRight(self):
-        return self.bounds.x >= RIGHT_SCROLL_BOUNDARY and self.distanceTraveled < (RIGHT_MAP_BORDER - RIGHT_SCROLL_BOUNDARY - self.bounds.size[1]) and not self.useAbility
+        return self.bounds.x >= RIGHT_SCROLL_BOUNDARY and self.distanceTraveled < (
+                    RIGHT_MAP_BORDER - RIGHT_SCROLL_BOUNDARY - self.bounds.size[1]) and not self.useAbility
 
     def toggleScrollBackgroundLeft(self):
         return self.bounds.x <= LEFT_SCROLL_BOUNDARY and self.distanceTraveled > 0 and not self.useAbility
-    
+
     def abilityTimer(self):
         if not self.abilityOn:
             currentTime = pygame.time.get_ticks()
@@ -242,6 +244,7 @@ class Character(Actor):
             else:
                 self.bullets.remove(bullet)
                 del bullet
+
     def die(self):
         if self.isJumping or self.isFalling:
             self.action = self.actions["deadInAir"]
@@ -257,7 +260,7 @@ class Character(Actor):
         else:
             pos = (self.bounds.x + 51, self.bounds.bottom - 12)
         self.mines.append(Mine(pos, 2, self.mine))
-    
+
     def placingMine(self):
         if self.useAbility:
             self.action = self.actions["placingMine"]
@@ -266,10 +269,7 @@ class Character(Actor):
             if self.frame == 5:
                 self.useAbility = False
                 self.abilityOn = False
-    
+
     def drawMine(self, screen):
         for mine in self.mines:
             mine.drawActor(screen)
-    
-
-
