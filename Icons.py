@@ -45,4 +45,6 @@ class Icons(Actor):
             case 8: self.action = 2
             case 9: self.action = 1
             case 10: self.action = 0
+        if player.isDead:
+            self.action = 10
 

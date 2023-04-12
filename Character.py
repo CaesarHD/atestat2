@@ -47,18 +47,24 @@ class Character(Actor):
         self.abilityOn = True
         self.mines = []
         self.mine = resource.mine
-        self.abilityCooldown = 25000
+        # self.abilityCooldown = 25000
+        self.abilityCooldown = 250
         self.abilityLastUpdate = 0
-        self.actionChanged = False
+
+    def changeAction(self, action):
+        if not self.action == self.actions[action]:
+            self.actionChanged = True
+            self.frame = 0
+            self.action = self.actions[action]
 
     def fall(self):
         self.isIdle = False
         if self.isArmed:
-            self.action = self.actions["jumpArmed"]
+            self.changeAction("jumpArmed")
             if self.isShooting:
                 self.shoot()
         else:
-            self.action = self.actions["jump"]
+            self.changeAction("jump")
 
         self.gravityForce += 1.5
         self.moveDown()
@@ -71,11 +77,11 @@ class Character(Actor):
                 self.preJump()
             else:
                 if self.isArmed:
-                    self.action = self.actions["jumpArmed"]
+                    self.changeAction("jumpArmed")
                     if self.isShooting:
                         self.shoot()
                 else:
-                    self.action = self.actions["jump"]
+                    self.changeAction("jump")
 
             # TODO: calculate this based on JUMP_HEIGHT
             self.gravityForce -= 0.3
@@ -109,21 +115,22 @@ class Character(Actor):
     def shoot(self):
         if not self.useAbility:
             if self.isIdle:
-                self.action = self.actions["idleShoot"]
+                self.changeAction("idleShoot")
                 if self.frame == 2:
                     self.isShooting = False
                     self.bulletReload = False
             else:
                 if self.isJumping or self.isFalling:
-                    self.action = self.actions["jumpShoot"]
+                    self.changeAction("jumpShoot")
                     if self.frame == 2:
                         self.isShooting = False
                         self.bulletReload = False
                 else:
-                    self.action = self.actions["walkShoot"]
+                    self.changeAction("walkShoot")
                     if self.frame == 5 or self.frame == 2:
                         self.isShooting = False
                         self.bulletReload = False
+
 
     def moveLeft(self):
         self.isLeft = True
@@ -132,9 +139,9 @@ class Character(Actor):
         if not self.useAbility:
             if not self.isJumping and not self.isFalling and not self.isShooting:
                 if not self.isArmed:
-                    self.action = self.actions["walk"]
+                    self.changeAction("walk")
                 else:
-                    self.action = self.actions["walkArmed"]
+                    self.changeAction("walkArmed")
             if self.isShooting:
                 self.shoot()
             if not self.walkInPlaceLeft and not self.bounds.x <= LEFT_MAP_BORDER:
@@ -148,9 +155,9 @@ class Character(Actor):
         if not self.useAbility:
             if not self.isJumping and not self.isFalling and not self.isShooting:
                 if not self.isArmed:
-                    self.action = self.actions["walk"]
+                    self.changeAction("walk")
                 else:
-                    self.action = self.actions["walkArmed"]
+                    self.changeAction("walkArmed")
             if self.isShooting:
                 self.shoot()
             if not self.walkInPlaceRight and not self.bounds.x >= (SCREEN_WIDTH - self.bounds.size[1]):
@@ -168,9 +175,9 @@ class Character(Actor):
                     self.shoot()
                 else:
                     if self.isArmed:
-                        self.action = self.actions["idleArmed"]
+                        self.changeAction("idleArmed")
                     else:
-                        self.action = self.actions["idle"]
+                        self.changeAction("idle")
 
     def moveUp(self):
         initial = self.bounds.topleft
@@ -247,9 +254,9 @@ class Character(Actor):
 
     def die(self):
         if self.isJumping or self.isFalling:
-            self.action = self.actions["deadInAir"]
+            self.changeAction("deadInAir")
         else:
-            self.action = self.actions["dead"]
+            self.changeAction("dead")
         if not self.isDead:
             if self.frame == self.deathLastFrame:
                 self.isDead = True
@@ -263,12 +270,12 @@ class Character(Actor):
 
     def placingMine(self):
         if self.useAbility:
-            self.action = self.actions["placingMine"]
+            self.abilityOn = False
+            self.changeAction("placingMine")
             if self.frame == 4:
                 self.generateMine()
             if self.frame == 5:
                 self.useAbility = False
-                self.abilityOn = False
 
     def drawMine(self, screen):
         for mine in self.mines:

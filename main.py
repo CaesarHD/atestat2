@@ -144,6 +144,7 @@ def gameOver():
     guardian.drawActor(screen)
     for mine in mines:
         mine.drawActor(screen)
+    updateActorsAnimation()
 
 
 def tickGame():
@@ -152,10 +153,10 @@ def tickGame():
     global lastUpdate
 
     updateActorsAnimation()
+    player.abilityTimer()
     handleInputEvent()
     drawCharacters()
     walkInPlace()
-    player.abilityTimer()
 
 
 def drawCharacters():

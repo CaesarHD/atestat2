@@ -24,6 +24,7 @@ class Actor:
         self.frame = 0
         self.stepCounter = 0
         self.scroll = 0
+        self.actionChanged = False
 
         for animation in self.animationSteps:
             tempImageList = []
@@ -33,8 +34,11 @@ class Actor:
             self.animationList.append(tempImageList)
 
     def tickAnimation(self):
-        self.resetAnimation()
+        if self.actionChanged:
+            self.frame = 0
+            self.actionChanged = False
         self.frame += 1
+        self.resetAnimation()
 
     def resetAnimation(self):
         if self.frame >= len(self.animationList[self.action]):
