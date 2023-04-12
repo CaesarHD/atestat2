@@ -1,8 +1,16 @@
+import random
+
+import pygame
+
 from Character import Character
 
 GROUND = 420
 GFORCE = 10
-PLAYER_DISTANCE = 200
+IDLE_ACTOR_DISTANCE = 200
+WALK_PLAYER_DISTANCE = 1000
+PLAYER_DISTANCE = 1200
+
+lastUpdate = 0
 
 
 class Enemy(Character):
@@ -16,7 +24,9 @@ class Enemy(Character):
         self.velocity = 6
         self.isShot = False
         self.isDead = False
-        self.bulletsReceived = 2
+        self.bulletsReceived = 3
+        self.idleShootTiming = 500
+        self.movingShootTiming = 0
 
     def fall(self):
         self.gravityForce += 1.5
@@ -32,22 +42,42 @@ class Enemy(Character):
         else:
             self.isRight = False
 
-    def moving(self, player):
-        if self.isCloseTo(player):
-            self.isIdle = True
-            self.action = self.actions["idleShoot"]
+    def tickShoot(self, time):
+        global lastUpdate
+        currentTime = pygame.time.get_ticks()
+        if currentTime - lastUpdate > time:
             self.isShooting = True
-            self.shoot()
-            self.changeOrientation(player)
+            lastUpdate = currentTime
         else:
             self.isShooting = False
-            if self.isRight:
-                if self.bounds.topleft[0] < 700:
-                    self.moveRight()
+
+    def shootAndMoving(self, player):
+        self.isIdle = False
+        if self.isCloseTo(player, WALK_PLAYER_DISTANCE):
+            self.movingShootTiming = random.randint(1000, 4000)
+            if not self.isShooting:
+                self.tickShoot(self.movingShootTiming)
+        if self.isRight:
+            self.moveRight()
+        else:
+            self.moveLeft()
+
+    def moving(self, player):
+        if self.bounds.x > player.bounds.x:
+            if self.isCloseTo(player, PLAYER_DISTANCE):
+                if self.isCloseTo(player, IDLE_ACTOR_DISTANCE):
+                    if not self.isShooting:
+                        self.tickShoot(self.idleShootTiming)
+                    self.inIdle()
                 else:
-                    self.isRight = False
-            if not self.isRight:
-                if self.bounds.topleft[0] > 20:
-                    self.moveLeft()
-                else:
-                    self.isRight = True
+                    self.shootAndMoving(player)
+                self.changeOrientation(player)
+        else:
+            if self.isCloseTo(player, IDLE_ACTOR_DISTANCE):
+                if not self.isShooting:
+                    self.tickShoot(self.idleShootTiming)
+                self.inIdle()
+            else:
+                self.shootAndMoving(player)
+            self.changeOrientation(player)
+

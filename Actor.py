@@ -2,14 +2,14 @@ from pygame import Rect
 import pygame
 
 GFORCE = 2
-PLAYER_DISTANCE = 200
 SPEED = 2
+
 
 class Actor:
 
     def __init__(self, pos, scale, resource):
         self.scale = scale
-        self.bounds = Rect(pos, (resource.size[0]*self.scale, resource.size[1]*self.scale))
+        self.bounds = Rect(pos, (resource.size[0] * self.scale, resource.size[1] * self.scale))
         self.velocity = 7
         self.gravityForce = GFORCE
         self.spritesheet = resource.spritesheet
@@ -25,6 +25,7 @@ class Actor:
         self.frame = 0
         self.stepCounter = 0
         self.scroll = 0
+        self.actionChanged = False
 
         for animation in self.animationSteps:
             tempImageList = []
@@ -73,12 +74,11 @@ class Actor:
 
     def moveUp(self, velocity):
         initial = self.bounds.topleft
-        self.bounds.topleft = (initial[0], initial[1] -velocity)
+        self.bounds.topleft = (initial[0], initial[1] - velocity)
 
     def moveDown(self, velocity):
         initial = self.bounds.topleft
         self.bounds.topleft = (initial[0], initial[1] + velocity)
 
-    def isCloseTo(self, actor):
-        return abs(self.bounds.topleft[0] - actor.bounds.topleft[0]) < PLAYER_DISTANCE
-
+    def isCloseTo(self, actor, distance):
+        return abs(self.bounds.topleft[0] - actor.bounds.topleft[0]) < distance

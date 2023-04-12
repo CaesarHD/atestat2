@@ -15,23 +15,65 @@ class Actions:
                          "preJumpShoot": 12,
                          "jumpShoot": 13,
                          "landingShoot": 14,
-                         "dead": 15}
+                         "placingMine": 15,
+                         "dead": 16,
+                         "deadInAir": 17}
+
+        guardianActions = {"idle": 0,
+                           "walk": 0,
+                           "preJump": 0,
+                           "jump": 0,
+                           "landing": 0,
+                           "idleArmed": 0,
+                           "walkArmed": 0,
+                           "preJumpArmed": 0,
+                           "jumpArmed": 0,
+                           "landingArmed": 0,
+                           "idleShoot": 1,
+                           "walkShoot": 0,
+                           "preJumpShoot": 0,
+                           "jumpShoot": 0,
+                           "landingShoot": 0,
+                           "dead": 0,
+                           "deadInAir": 0}
 
         rubinsActions = {"idleArmed": 0,
                          "walkArmed": 1,
                          "idleShoot": 2,
                          "jumpShoot": 2,
                          "walkShoot": 3,
-                         "dead": 4}
+                         "dead": 4,
+                         "idle": 0,
+                         "walk": 0,
+                         "preJump": 0,
+                         "jump": 0,
+                         "landing": 0,
+                         "preJumpArmed": 0,
+                         "jumpArmed": 0,
+                         "landingArmed": 0,
+                         "preJumpShoot": 0,
+                         "landingShoot": 0,
+                         "deadInAir": 0
+                         }
 
         playerShipActions = {"landedOFF": 0,
                              "airOFF": 1,
                              "landedON": 2,
                              "airON": 3}
 
+        playerAbilityStates = {"idle": 0,
+                               "active": 1,
+                               "passive": 2}
+
+        playerGunStates = {"idle": 1,
+                           "active": 0}
+
         self.__cache = {"player": playerActions,
                         "rubinEnemy": rubinsActions,
-                        "playerShip": playerShipActions}
+                        "playerShip": playerShipActions,
+                        "guardian": guardianActions,
+                        "playerAbility": playerAbilityStates,
+                        "playerGunStates": playerGunStates}
 
     def getActions(self, name):
         return self.__cache[name]
