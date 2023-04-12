@@ -4,11 +4,12 @@ import pygame
 GFORCE = 2
 SPEED = 2
 
+
 class Actor:
 
     def __init__(self, pos, scale, resource):
         self.scale = scale
-        self.bounds = Rect(pos, (resource.size[0]*self.scale, resource.size[1]*self.scale))
+        self.bounds = Rect(pos, (resource.size[0] * self.scale, resource.size[1] * self.scale))
         self.velocity = 7
         self.gravityForce = GFORCE
         self.spritesheet = resource.spritesheet
@@ -73,7 +74,7 @@ class Actor:
 
     def moveUp(self, velocity):
         initial = self.bounds.topleft
-        self.bounds.topleft = (initial[0], initial[1] -velocity)
+        self.bounds.topleft = (initial[0], initial[1] - velocity)
 
     def moveDown(self, velocity):
         initial = self.bounds.topleft
@@ -81,4 +82,3 @@ class Actor:
 
     def isCloseTo(self, actor, distance):
         return abs(self.bounds.topleft[0] - actor.bounds.topleft[0]) < distance
-
