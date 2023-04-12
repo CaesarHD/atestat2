@@ -18,6 +18,9 @@ class Scene:
     def generateEnemy(self):
         for pos in self.enemyPositions:
             self.rubinEnemies.append(
-                Enemy((pos, 100), RUBIN_ENEMY_SIZE, self.resourceProvider.getResource("rubinEnemy"),
+                Enemy((pos, 100),
+                      RUBIN_ENEMY_SIZE,
+                      self.resourceProvider.getResource("rubinEnemy"),
                       RUBIN_ENEMY_BULLET_SIZE,
-                      RUBIN_ENEMY_BULLET_SPAWN_LOCATION))
+                      RUBIN_ENEMY_BULLET_SPAWN_LOCATION,
+                      (50, 0)))

@@ -6,7 +6,7 @@ SPEED = 2
 
 class Ground(Actor):
     def __init__(self, pos, scale, resource):
-        super().__init__(pos, scale, resource)
+        super().__init__(pos, scale, resource, None)
         self.pos = pos
         self.bounds.bottom = SCREEN_BOTTOM
 

@@ -14,8 +14,8 @@ lastUpdate = 0
 
 
 class Enemy(Character):
-    def __init__(self, pos, scale, resource, bulletSize, bulletSpawnLocation):
-        super().__init__(pos, scale, resource, bulletSize, bulletSpawnLocation)
+    def __init__(self, pos, scale, resource, bulletSize, bulletSpawnLocation, collisionOffset):
+        super().__init__(pos, scale, resource, bulletSize, bulletSpawnLocation, collisionOffset)
         self.isShooting = False
         self.isJumping = False
         self.isArmed = True

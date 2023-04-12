@@ -4,7 +4,7 @@ from Actor import Actor
 
 class Icons(Actor):
     def __init__(self, pos, scale, resource):
-        super().__init__(pos, scale, resource)
+        super().__init__(pos, scale, resource, None)
         self.action = Actions()
         self.actions = resource.actions
         self.action = 0

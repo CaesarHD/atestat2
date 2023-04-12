@@ -41,22 +41,18 @@ staticBackground = Background((0, 0), 2, resourceProvider.getResource("lvl1Stati
 dinamicBackgorund = Background((0, 0), 2, resourceProvider.getResource("lvl1DinamicBackground"))
 ground = Ground((0, 0), 2, resourceProvider.getResource("lvl1Ground"))
 
-player = Character((0, 100), 2, resourceProvider.getResource("player"), 5, 42)
-playerShip = Actor((0, 0), 1.5, resourceProvider.getResource("playerShip"))
+player = Character((0, 100), 2, resourceProvider.getResource("player"), 5, 42, (50, 0))
+playerShip = Actor((0, 0), 1.5, resourceProvider.getResource("playerShip"), None)
 
 mines = []
 explosions = []
 
 rubinEnemies = []
-rubinEnemies = scene.rubinEnemies
+# rubinEnemies = scene.rubinEnemies
 
 ui = UI()
 
 pos = 2000
-rubinEnemies.append(
-    Enemy((pos, 100), RUBIN_ENEMY_SIZE, resourceProvider.getResource("rubinEnemy"), RUBIN_ENEMY_BULLET_SIZE,
-          RUBIN_ENEMY_BULLET_SPAWN_LOCATION))
-
 playerShip.action = 0
 
 lastUpdate = pygame.time.get_ticks()
@@ -64,7 +60,7 @@ scroll = 0
 playerShip.bounds.bottom = ground.bounds.top
 player.action = 15
 
-guardian = Guardian((1000, 100), 2, resourceProvider.getResource("guardian"), 5, 42)
+guardian = Guardian((1000, 100), 2, resourceProvider.getResource("guardian"), 5, 42, (15, 0))
 
 actors = [guardian, playerShip]
 
@@ -100,7 +96,7 @@ def main():
 
 
 def generateExplosion(pos):
-    explosions.append(Actor(pos, 2, resourceProvider.getResource('mineExplosion')))
+    explosions.append(Actor(pos, 2, resourceProvider.getResource('mineExplosion'), None))
 
 
 def drawEnvironment(scroll):
@@ -134,7 +130,7 @@ def gameOver():
             player.tickAnimation()
         for enemy in rubinEnemies:
             enemy.tickAnimation()
-            guardian.tickAnimation()
+            # guardian.tickAnimation()
         lastUpdate = currentTime
     player.die()
     player.drawActor(screen)
@@ -221,7 +217,7 @@ def updateActorsAnimation():
     currentTime = pygame.time.get_ticks()
     if currentTime - lastUpdate > player.animationCooldown:
         player.tickAnimation()
-        guardian.tickAnimation()
+        # guardian.tickAnimation()
         for enemy in rubinEnemies:
             enemy.tickAnimation()
         for explosion in explosions:

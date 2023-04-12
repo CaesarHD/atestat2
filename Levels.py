@@ -19,7 +19,8 @@ class Levels:
                                                self.storage.rubinBullet, None)
         self.resourceProvider.registerResource("player", self.storage.playerSpritesheet,
                                                self.storage.playerAnimationFrames, self.storage.playerFrameSize,
-                                               self.action.getActions("player"), self.storage.playerBullet, self.storage.mine)
+                                               self.action.getActions("player"), self.storage.playerBullet, self.storage.mine
+                                            )
         self.resourceProvider.registerResource("playerShip", self.storage.playerShipSpriteSheet,
                                                self.storage.playerShipAnimationFrames,
                                                self.storage.playerShipFrameSize, self.action.getActions("playerShip"),

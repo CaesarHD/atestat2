@@ -14,14 +14,14 @@ GROUND = 420
 JUMP_HEIGHT = 150
 GFORCE = 10
 RIGHT_MAP_BORDER = 1138 * 10
-LEFT_MAP_BORDER = 0
+LEFT_MAP_BORDER = 15
 SCREEN_WIDTH = 800 * 1.42
 PLAYER_OFFSET = 4
 
 
 class Character(Actor):
-    def __init__(self, pos, scale, resource, bulletSize, bulletSpawnLocation):
-        super().__init__(pos, scale, resource)
+    def __init__(self, pos, scale, resource, bulletSize, bulletSpawnLocation, collisionOffset):
+        super().__init__(pos, scale, resource, collisionOffset)
         self.preJumpPosition = GROUND
         self.isShooting = False
         self.isJumping = False
@@ -145,7 +145,7 @@ class Character(Actor):
                     self.changeAction("walkArmed")
             if self.isShooting:
                 self.shoot()
-            if not self.walkInPlaceLeft and not self.bounds.x <= LEFT_MAP_BORDER:
+            if not self.walkInPlaceLeft and not self.getCollisionBox().x <= LEFT_MAP_BORDER:
                 initial = self.bounds.topleft
                 self.bounds.topleft = (initial[0] - self.velocity, initial[1])
 
@@ -189,7 +189,7 @@ class Character(Actor):
         self.bounds.topleft = (initial[0], initial[1] + self.gravityForce)
 
     def isCollideWith(self, obstacle):
-        return self.bounds.colliderect(obstacle.bounds)
+        return self.getCollisionBox().colliderect(obstacle.getCollisionBox())
 
     def isOnObject(self, obstacle):
         return self.bounds.bottom + self.gravityForce > obstacle.bounds.top
@@ -275,7 +275,8 @@ class Character(Actor):
             self.changeAction("placingMine")
             if self.frame == 4:
                 self.generateMine()
-            if self.frame == 5:
+            if self.frame == 6:
+                print("asdasdasd")
                 self.useAbility = False
 
     def drawMine(self, screen):

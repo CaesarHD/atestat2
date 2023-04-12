@@ -1,5 +1,5 @@
-from pygame import Rect
 import pygame
+from pygame import Rect
 
 GFORCE = 2
 SPEED = 2
@@ -7,9 +7,15 @@ SPEED = 2
 
 class Actor:
 
-    def __init__(self, pos, scale, resource):
+    def __init__(self, pos, scale, resource, collisionBox):
         self.scale = scale
         self.bounds = Rect(pos, (resource.size[0] * self.scale, resource.size[1] * self.scale))
+
+        if collisionBox is None:
+            self.collisionOffset = (0, 0)
+        else:
+            self.collisionOffset = (collisionBox[0] * self.scale, collisionBox[1] * self.scale)
+
         self.velocity = 7
         self.gravityForce = GFORCE
         self.spritesheet = resource.spritesheet
@@ -21,7 +27,7 @@ class Actor:
         self.animationListFlip = 0
         self.animationSteps = resource.animationFrames
         self.action = 0
-        self.animationCooldown = 90
+        self.animationCooldown = 500
         self.frame = 0
         self.stepCounter = 0
         self.scroll = 0
@@ -36,14 +42,19 @@ class Actor:
 
     def tickAnimation(self):
         self.frame += 1
-        self.resetAnimation()
+        # self.resetAnimation()
 
     def resetAnimation(self):
         if self.frame >= len(self.animationList[self.action]):
+            print(self.frame)
+
+            print("=======")
+
             self.frame = 0
 
     def drawActor(self, screen):
         self.resetAnimation()
+
         if self.isRight:
             screen.blit(self.animationList[self.action][self.frame], self.bounds)
         else:
@@ -82,3 +93,11 @@ class Actor:
 
     def isCloseTo(self, actor, distance):
         return abs(self.bounds.topleft[0] - actor.bounds.topleft[0]) < distance
+
+    def getCollisionBox(self):
+        collisionBoxWidth = self.bounds.width - self.collisionOffset[0]
+        collisionBoxHeight = self.bounds.height - self.collisionOffset[1]
+        collisionBoxX = self.bounds.x + (self.bounds.width / 2) - (collisionBoxWidth / 2)
+        collisionBoxY = self.bounds.y + (self.bounds.height / 2) - (collisionBoxHeight / 2)
+
+        return Rect(collisionBoxX, collisionBoxY, collisionBoxWidth, collisionBoxHeight)

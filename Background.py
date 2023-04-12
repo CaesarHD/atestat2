@@ -5,7 +5,7 @@ from Actor import Actor
 
 class Background(Actor):
     def __init__(self, pos, scale, resource):
-        super().__init__(pos, scale, resource)
+        super().__init__(pos, scale, resource, None)
         self.backgrounds = []
         animation = 0
         for _ in self.animationSteps:

@@ -5,7 +5,7 @@ MIDDLE_MINE_COORD = 10.5
 
 class Mine(Actor):
     def __init__(self, pos, scale, resource):
-        super().__init__(pos, scale, resource)
+        super().__init__(pos, scale, resource, None)
         self.isActive = False
         self.isTriggered = False
         self.resource = resource

@@ -4,7 +4,7 @@ import pygame
 
 class Bullet(Actor):
     def __init__(self, pos, scale, resource, isRight):
-        super().__init__(pos, scale, resource)
+        super().__init__(pos, scale, resource, None)
         self.isRight = isRight
         self.out = False
 
