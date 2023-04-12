@@ -47,8 +47,7 @@ class Character(Actor):
         self.abilityOn = True
         self.mines = []
         self.mine = resource.mine
-        # self.abilityCooldown = 25000
-        self.abilityCooldown = 250
+        self.abilityCooldown = 20000
         self.abilityLastUpdate = 0
 
     def changeAction(self, action):
@@ -60,9 +59,10 @@ class Character(Actor):
     def fall(self):
         self.isIdle = False
         if self.isArmed:
-            self.changeAction("jumpArmed")
             if self.isShooting:
                 self.shoot()
+            else:
+                self.changeAction("jumpArmed")
         else:
             self.changeAction("jump")
 
@@ -73,15 +73,16 @@ class Character(Actor):
     def jump(self):
         if self.isJumping and not self.isFalling and not self.useAbility:
             self.isIdle = False
-            if self.isPreJumping:
-                self.preJump()
-            else:
-                if self.isArmed:
-                    self.changeAction("jumpArmed")
-                    if self.isShooting:
-                        self.shoot()
+            # if self.isPreJumping:
+            #     self.preJump()
+            # else:
+            if self.isArmed:
+                if self.isShooting:
+                    self.shoot()
                 else:
-                    self.changeAction("jump")
+                    self.changeAction("jumpArmed")
+            else:
+                self.changeAction("jump")
 
             # TODO: calculate this based on JUMP_HEIGHT
             self.gravityForce -= 0.3
@@ -96,9 +97,9 @@ class Character(Actor):
     def preJump(self):
         if self.isPreJumping:
             if self.isArmed:
-                self.action = self.actions["preJumpArmed"]
+                self.changeAction("preJumpArmed")
             else:
-                self.action = self.actions["preJump"]
+                self.changeAction("preJump")
             if self.frame == 2:
                 self.isPreJumping = False
 
@@ -106,9 +107,9 @@ class Character(Actor):
         if self.isLanding:
             self.bounds.bottom = objects.bounds.top
             if self.isArmed:
-                self.action = self.actions["landingArmed"]
+                self.changeAction("landingArmed")
             else:
-                self.action = self.actions["landing"]
+                self.changeAction("landing")
             if self.frame == 1:
                 self.isLanding = False
 
@@ -235,7 +236,7 @@ class Character(Actor):
                 self.abilityLastUpdate = currentTime
 
     def toggleAbility(self):
-        if self.abilityOn and not self.jump() and not self.isFalling and not self.useAbility:
+        if self.abilityOn and not self.isJumping and not self.isFalling and not self.useAbility:
             self.useAbility = True
 
     def updateBullet(self, objects, characters, screen):

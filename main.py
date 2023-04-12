@@ -152,11 +152,11 @@ def tickGame():
     global scroll
     global lastUpdate
 
-    updateActorsAnimation()
     player.abilityTimer()
     handleInputEvent()
     drawCharacters()
     walkInPlace()
+    updateActorsAnimation()
 
 
 def drawCharacters():
