@@ -25,11 +25,11 @@ class Levels:
                                                self.storage.playerShipAnimationFrames,
                                                self.storage.playerShipFrameSize, self.action.getActions("playerShip"),
                                                None, None)
-        self.resourceProvider.registerResource("lvl1Ground", self.storage.groundSpritesheet, [1],
+        self.resourceProvider.registerResource("ground", self.storage.groundSpritesheet, [1],
                                                self.storage.lvl1GroundSize, None, None, None)
-        self.resourceProvider.registerResource("lvl1StaticBackground", self.storage.staticBackgroundSpritesheet, [1],
+        self.resourceProvider.registerResource("staticBackground", self.storage.staticBackgroundSpritesheet, [1],
                                                self.storage.staticBackgroundSize, None, None, None)
-        self.resourceProvider.registerResource("lvl1DinamicBackground", self.storage.dinamicBackgroundSpritesheet,
+        self.resourceProvider.registerResource("dinamicBackground", self.storage.dinamicBackgroundSpritesheet,
                                                self.storage.dinamicBackgroundAnimationFrames,
                                                self.storage.dinamicBackgroundSize, None, None, None)
         self.resourceProvider.registerResource("guardian", self.storage.guardianSpritesheet,

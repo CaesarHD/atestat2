@@ -13,7 +13,7 @@ LEFT_SCROLL_BOUNDARY = 400
 GROUND = 420
 JUMP_HEIGHT = 150
 GFORCE = 10
-RIGHT_MAP_BORDER = 1138 * 10
+RIGHT_MAP_BORDER = 1138 * 5
 LEFT_MAP_BORDER = 15
 SCREEN_WIDTH = 800 * 1.42
 PLAYER_OFFSET = 4
@@ -275,8 +275,7 @@ class Character(Actor):
             self.changeAction("placingMine")
             if self.frame == 4:
                 self.generateMine()
-            if self.frame == 6:
-                print("asdasdasd")
+            if self.frame == 5:
                 self.useAbility = False
 
     def drawMine(self, screen):

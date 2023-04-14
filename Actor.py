@@ -27,7 +27,7 @@ class Actor:
         self.animationListFlip = 0
         self.animationSteps = resource.animationFrames
         self.action = 0
-        self.animationCooldown = 500
+        self.animationCooldown = 90
         self.frame = 0
         self.stepCounter = 0
         self.scroll = 0
@@ -46,10 +46,6 @@ class Actor:
 
     def resetAnimation(self):
         if self.frame >= len(self.animationList[self.action]):
-            print(self.frame)
-
-            print("=======")
-
             self.frame = 0
 
     def drawActor(self, screen):

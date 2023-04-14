@@ -27,55 +27,35 @@ pygame.init()
 clock = pygame.time.Clock()
 screen = Screen(800 * 1.42, 480 * 1.33)
 level = Levels()
-scene = Scene()
+lvl = 1
+rubinEnemyPositions = [3000, 4000, 4500, 5500, 6000, 6100, 7000, 7200, 7500, 9000, 9500, 10000, 10100,
+                               12000, 13000, 13100, 14500, 14900, 17000, 17100, 17200, 17800, 20000, 20100, 20500, 21000, 21050, 21100, 21500, 22000]
+resourceProvider = level.loadResourcesLevel(1)
+player = Character((0, 100), 2, resourceProvider.getResource("player"), 5, 42, (50, 0))
+actors = []
+scene = Scene(screen, player, rubinEnemyPositions, lvl, actors)
 
 SCROLLING_SPEED = 4
 
-RUBIN_ENEMY_BULLET_SIZE = 3.5
-RUBIN_ENEMY_BULLET_SPAWN_LOCATION = 30
-RUBIN_ENEMY_SIZE = 2
+# playerShip = Actor((0, 0), 1.5, resourceProvider.getResource("playerShip"), None)
 
-resourceProvider = level.loadResourcesLevel(1)
-
-staticBackground = Background((0, 0), 2, resourceProvider.getResource("lvl1StaticBackground"))
-dinamicBackgorund = Background((0, 0), 2, resourceProvider.getResource("lvl1DinamicBackground"))
-ground = Ground((0, 0), 2, resourceProvider.getResource("lvl1Ground"))
-
-player = Character((0, 100), 2, resourceProvider.getResource("player"), 5, 42, (50, 0))
-playerShip = Actor((0, 0), 1.5, resourceProvider.getResource("playerShip"), None)
-
-mines = []
-explosions = []
-
-rubinEnemies = []
-# rubinEnemies = scene.rubinEnemies
+rubinEnemies = scene.rubinEnemies
 
 ui = UI()
 
-pos = 2000
-playerShip.action = 0
+explosionPos = 2000
 
 lastUpdate = pygame.time.get_ticks()
 scroll = 0
-playerShip.bounds.bottom = ground.bounds.top
-player.action = 15
+# playerShip.bounds.bottom = ground.bounds.top
 
-guardian = Guardian((1000, 100), 2, resourceProvider.getResource("guardian"), 5, 42, (15, 0))
+# guardian = Guardian((1000, 100), 2, resourceProvider.getResource("guardian"), 5, 42, (15, 0))
 
-actors = [guardian, playerShip]
-
-mines = player.mines
-
-objects = [playerShip]
-
-playerOpponents = rubinEnemies
-enemyOpponents = []
 
 running = True
 
 
 def main():
-    global scroll
 
     scene.generateEnemy()
 
@@ -83,7 +63,7 @@ def main():
 
         clock.tick(60)
 
-        drawEnvironment(scroll)
+        scene.drawEnvironment()
         ui.renderUI(player, screen)
 
         if not player.isShot:
@@ -94,27 +74,6 @@ def main():
 
     pygame.quit()
 
-
-def generateExplosion(pos):
-    explosions.append(Actor(pos, 2, resourceProvider.getResource('mineExplosion'), None))
-
-
-def drawEnvironment(scroll):
-    staticBackground.drawActor(screen)
-    dinamicBackgorund.scrolling(screen, scroll)
-    ground.scrolling(screen, scroll)
-    playerShip.drawActor(screen)
-
-
-def scrollActors(scroll, actors):
-    for actor in actors:
-        actor.scrolling(scroll)
-
-    for mine in mines:
-        mine.scrolling(scroll)
-
-    for explosion in explosions:
-        explosion.scrolling(scroll)
 
 
 def gameOver():
@@ -130,99 +89,23 @@ def gameOver():
             player.tickAnimation()
         for enemy in rubinEnemies:
             enemy.tickAnimation()
-            # guardian.tickAnimation()
         lastUpdate = currentTime
     player.die()
     player.drawActor(screen)
     for enemy in rubinEnemies:
         enemy.moving(player)
         enemy.drawActor(screen)
-    guardian.drawActor(screen)
     for mine in mines:
         mine.drawActor(screen)
-    updateActorsAnimation()
+    scene.updateActorsAnimation()
 
 
 def tickGame():
-    global running
-    global scroll
-    global lastUpdate
-
-    updateActorsAnimation()
+    scene.updateActorsAnimation()
     player.abilityTimer()
     handleInputEvent()
-    drawCharacters()
+    scene.drawCharacters()
     walkInPlace()
-
-
-def drawCharacters():
-    global pos
-    for enemy in rubinEnemies:
-        if not enemy.isShot:
-            enemy.gravity(ground)
-            enemy.moving(player)
-            enemy.drawActor(screen)
-            enemy.updateBullet(objects, enemyOpponents, screen)
-        else:
-            enemy.die()
-            if not enemy.isDead:
-                enemy.drawActor(screen)
-            else:
-                rubinEnemies.remove(enemy)
-                del enemy
-                if player.bulletsReceived < 10:
-                    player.bulletsReceived = player.bulletsReceived + 2
-
-    guardian.gravity(ground)
-    guardian.drawActor(screen)
-    guardian.updateBullet(objects, enemyOpponents, screen)
-    guardian.AI(player)
-
-    player.gravity(ground)
-    player.jump()
-    player.drawActor(screen)
-    player.updateBullet(objects, playerOpponents, screen)
-    player.placingMine()
-    player.drawMine(screen)
-    mineExplosion()
-    drawExplosion()
-
-
-def drawExplosion():
-    for explosion in explosions:
-        explosion.drawActor(screen)
-        if explosion.frame == 5:
-            explosions.remove(explosion)
-            del explosion
-
-
-def mineToggleExplosion(mine):
-    mine.active(player)
-    mine.trigger(player, rubinEnemies)
-
-
-def mineExplosion():
-    global pos
-    for mine in mines:
-        mineToggleExplosion(mine)
-        if mine.isTriggered:
-            pos = mine.getExplosionCoord()
-            generateExplosion(pos)
-            mines.remove(mine)
-            del mine
-
-
-def updateActorsAnimation():
-    global lastUpdate
-    currentTime = pygame.time.get_ticks()
-    if currentTime - lastUpdate > player.animationCooldown:
-        player.tickAnimation()
-        # guardian.tickAnimation()
-        for enemy in rubinEnemies:
-            enemy.tickAnimation()
-        for explosion in explosions:
-            explosion.tickAnimation()
-        lastUpdate = currentTime
 
 
 def walkInPlace():
@@ -230,15 +113,15 @@ def walkInPlace():
     if player.walkInPlaceLeft:
         for enemy in rubinEnemies:
             enemy.scrolling(offset)
-        scrollActors(offset, actors)
+        scene.scrollActors(offset)
     if player.walkInPlaceRight:
         for enemy in rubinEnemies:
             enemy.scrolling(-offset)
-        scrollActors(-offset, actors)
+        scene.scrollActors(-offset)
 
 
 def handleInputEvent():
-    global running, scroll
+    global running
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
@@ -257,7 +140,7 @@ def handleInputEvent():
     if key[pygame.K_a]:
         player.walkInPlaceRight = False
         if player.toggleScrollBackgroundLeft():
-            scroll -= SCROLLING_SPEED
+            scene.scroll -= SCROLLING_SPEED
             player.walkInPlaceLeft = True
             player.distanceTraveled -= SCROLLING_SPEED
         else:
@@ -266,7 +149,7 @@ def handleInputEvent():
     elif key[pygame.K_d]:
         player.walkInPlaceLeft = False
         if player.toggleScrollBackgroundRight():
-            scroll += SCROLLING_SPEED
+            scene.scroll += SCROLLING_SPEED
             player.walkInPlaceRight = True
             player.distanceTraveled += SCROLLING_SPEED
         else:
