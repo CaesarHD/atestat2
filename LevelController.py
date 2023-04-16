@@ -67,6 +67,7 @@ class LevelController:
                       RUBIN_ENEMY_BULLET_SPAWN_LOCATION,
                       (50, 0)))
 
+
     def updateActorsList(self):
         for enemy in self.rubinEnemies:
             self.actors.append(enemy)
