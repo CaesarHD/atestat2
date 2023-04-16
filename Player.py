@@ -3,25 +3,14 @@ import pygame
 
 SCROLLING_SPEED = 4
 
+
 class Player(Character):
     def __init__(self, pos, scale, resource, bulletSize, bulletSpawnLocation, collisionOffset):
         super().__init__(pos, scale, resource, bulletSize, bulletSpawnLocation, collisionOffset)
         self.scrollingSpeed = SCROLLING_SPEED
+        self.scroll = 0
 
-    def handleInputEvent(self, running):
-
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-            if event.type == pygame.KEYDOWN:
-                match event.key:
-                    case pygame.K_q:
-                        self.toggleWeapon()
-                    case pygame.K_w:
-                        self.toggleJump()
-                    case pygame.K_e:
-                        self.toggleAbility()
-
+    def keyPessedInputEvent(self):
         key = pygame.key.get_pressed()
         if key[pygame.K_SPACE]:
             self.toggleShooting()
@@ -45,3 +34,13 @@ class Player(Character):
             self.moveRight()
         else:
             self.inIdle()
+
+    def keyDownInputEvent(self, event):
+        if event.type == pygame.KEYDOWN:
+            match event.key:
+                case pygame.K_q:
+                    self.toggleWeapon()
+                case pygame.K_w:
+                    self.toggleJump()
+                case pygame.K_e:
+                    self.toggleAbility()

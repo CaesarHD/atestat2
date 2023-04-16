@@ -49,6 +49,8 @@ class Character(Actor):
         self.mine = resource.mine
         self.abilityCooldown = 20000
         self.abilityLastUpdate = 0
+        self.onObject = False
+        self.currentObject = None
 
     def changeAction(self, action):
         if not self.action == self.actions[action]:
@@ -72,6 +74,7 @@ class Character(Actor):
 
     def jump(self):
         if self.isJumping and not self.isFalling and not self.useAbility:
+            self.onObject = False
             self.isIdle = False
             # if self.isPreJumping:
             #     self.preJump()
@@ -192,19 +195,28 @@ class Character(Actor):
         return self.getCollisionBox().colliderect(obstacle.getCollisionBox())
 
     def isOnObject(self, obstacle):
-        return self.bounds.bottom + self.gravityForce > obstacle.bounds.top
+        return self.bounds.bottom + self.gravityForce > obstacle.bounds.top and obstacle.getCollisionBox().topleft < self.getCollisionBox().topleft < obstacle.getCollisionBox().topright
 
     def placeCharacterOnObject(self, obstacle):
         self.bounds.bottom = obstacle.bounds.top
 
-    def gravity(self, obstacle):
-        if not self.isOnObject(obstacle):
+    def gravity(self, obstacles):
+        ok = 0
+        for obstacle in obstacles:
+            if self.isOnObject(obstacle):
+                ok = 1
+                self.currentObject = obstacle
+        if ok == 1:
+            self.onObject = True
+        else:
+            self.onObject = False
+        if not self.onObject:
             if not self.isJumping:
                 self.isFalling = True
                 self.isIdle = False
                 self.fall()
         else:
-            self.placeCharacterOnObject(obstacle)
+            self.placeCharacterOnObject(self.currentObject)
             self.isFalling = False
             self.gravityForce = GFORCE
 

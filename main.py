@@ -27,7 +27,6 @@ pygame.init()
 clock = pygame.time.Clock()
 screen = Screen(800 * 1.42, 480 * 1.33)
 level = Levels()
-resourceProvider = level.loadResourcesLevel(1)
 actors = []
 levelController = LevelController(screen, actors)
 nextLevel = False
@@ -49,6 +48,11 @@ def main():
     global nextLevel
 
     levelController.generateEnemy()
+    levelController.generateGuardian()
+    levelController.generatePress()
+    levelController.generateCable()
+    levelController.updateActorsList()
+    levelController.updateObjectsList()
 
     while levelController.running:
         if nextLevel:
@@ -60,12 +64,14 @@ def main():
         clock.tick(60)
 
         levelController.drawEnvironment()
-        levelController.ui.renderUI(levelController.player, levelController.screen)
 
         if not levelController.player.isShot:
             levelController.tickGame()
         else:
             gameOver()
+
+        levelController.ui.renderUI(levelController.player, levelController.screen)
+
         pygame.display.update()
 
     pygame.quit()

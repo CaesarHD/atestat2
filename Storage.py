@@ -38,12 +38,12 @@ class Storage:
         self.playerShipAnimationFrames = [1, 1, 1, 1]
         self.playerShipFrameSize = (485, 197)
         self.lvl1GroundSize = (1138, 38)
-        self.staticBackgroundSpritesheet = 'Images/Levels/LEVEL_1/BACKGROUND.png'
-        self.staticBackgroundSize = (569, 320)
-        self.dinamicBackgroundSpritesheet = 'Images/Levels/LEVEL_1/spritesheet (3).png'
-        self.dinamicBackgroundSize = (1138, 320)
-        self.dinamicBackgroundAnimationFrames = [1, 1, 1]
-        self.groundSpritesheet = 'Images/Levels/LEVEL_1/GROUND_2_FLAT.png'
+        self.lvl1StaticBackgroundSpritesheet = 'Images/Levels/LEVEL_1/BACKGROUND.png'
+        self.lvl1StaticBackgroundSize = (569, 320)
+        self.lvl1DinamicBackgroundSpritesheet = 'Images/Levels/LEVEL_1/spritesheet (3).png'
+        self.lvl1DinamicBackgroundSize = (1138, 320)
+        self.lvl1DinamicBackgroundAnimationFrames = [1, 1, 1]
+        self.lvl1GroundSpritesheet = 'Images/Levels/LEVEL_1/GROUND_2_FLAT.png'
         self.playerSpritesheet = 'Images/ALIEN_FRAMES/spritesheet.png'
         self.guardianSpritesheet = 'Images/Levels/LEVEL_1/guardian.png'
         self.guardianAnimationFrames = [4, 3]
@@ -58,14 +58,24 @@ class Storage:
         self.mineIconSpritesheet = 'Images/Game_UI/UI/mine_icon.png'
         self.gunIconSpritesheet = 'Images/Game_UI/UI/gun_icon.png'
         self.gunIconFrames = [1, 1]
-        self.lvl2CableSpritesheet = 'Images/Levels/LEVEL_2/FISIERE_VITAEX_LVL2/Cablu/cable.png'
+        self.lvl2CableSpritesheet = 'Images/Levels/LEVEL_2/FISIERE_VITAEX_LVL2/Cable/cable.png'
         self.lvl2CableSize = (102, 282)
         self.lvl2LaserSpritesheet = 'Images/Levels/LEVEL_2/FISIERE_VITAEX_LVL2/Laser/laser.png'
         self.lvl2LaserSize = (69, 282)
-        self.lvl2PipeSpritesheet = 'Images/Levels/LEVEL_2/FISIERE_VITAEX_LVL2/Teava/pipe.png'
-        self.lvl2PressUpSpriteSheet = 'Images/Levels/LEVEL_2/FISIERE_VITAEX_LVL2/Presa/press_up.png'
-        self.lvl2PressDownSpriteSheet = 'Images/Levels/LEVEL_2/FISIERE_VITAEX_LVL2/Presa/press_down.png'
+        self.lvl2LaserAnimationFrames = [3, 10]
+        self.lvl2PipeSpritesheet = 'Images/Levels/LEVEL_2/FISIERE_VITAEX_LVL2/Pipe/pipe.png'
+        self.lvl2PressUpSpriteSheet = 'Images/Levels/LEVEL_2/FISIERE_VITAEX_LVL2/Press/press_up.png'
+        self.lvl2PressUpSize = (69, 272)
+        self.lvl2PressDownSpriteSheet = 'Images/Levels/LEVEL_2/FISIERE_VITAEX_LVL2/Press/press_down.png'
+        self.lvl2PressDownSize = (69, 10)
         self.lvl2PipeSize = (108, 282)
+        self.lvl2GroundSize = (569, 38)
+        self.lvl2StaticBackgroundSpritesheet = 'Images/Levels/LEVEL_2/FISIERE_VITAEX_LVL2/Background/staticBackground.png'
+        self.lvl2StaticBackgroundSize = (569, 320)
+        self.lvl2DinamicBackgroundSpritesheet = 'Images/Levels/LEVEL_2/FISIERE_VITAEX_LVL2/Background/spritesheet (22).png'
+        self.lvl2DinamicBackgroundSize = (569, 320)
+        self.lvl2DinamicBackgroundAnimationFrames = [1, 1, 1]
+        self.lvl2GroundSpritesheet = 'Images/Levels/LEVEL_2/FISIERE_VITAEX_LVL2/Background/FLOOR.png'
 
     def getResource(self):
         return self.resourceProvider
