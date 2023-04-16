@@ -11,5 +11,8 @@ class Screen:
     def fill(self, color):
         self.screen.fill(color)
 
+    def fillArea(self, color, area):
+        self.screen.fill(color, area)
+
     def blit(self, image, dest):
         self.screen.blit(image, dest)

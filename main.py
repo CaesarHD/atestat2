@@ -53,6 +53,7 @@ def main():
     levelController.generateCable()
     levelController.updateActorsList()
     levelController.updateObjectsList()
+    levelController.updateRigidBodies()
 
     while levelController.running:
         if nextLevel:

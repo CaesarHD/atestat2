@@ -10,8 +10,6 @@ from Guardian import Guardian
 from Levels import Levels
 from Player import Player
 from Press import Press
-from PressDown import PressDown
-from PressUp import PressUp
 from UI import UI
 
 RUBIN_ENEMY_BULLET_SIZE = 3.5
@@ -46,7 +44,7 @@ class LevelController:
         self.guardians = []
         self.guardianEnemy = []
         self.guardianEnemy.append(self.player)
-        self.pressPos = self.level.pressPos
+        self.pressXPos = self.level.pressPos
         self.presses = []
         self.objects = []
         self.objects.append(self.ground)
@@ -56,6 +54,7 @@ class LevelController:
         self.enemyBulletTarget.append(self.player)
         self.guardianBulletTarget = []
         self.guardianBulletTarget.append(self.player)
+        self.rigidBodies = []
 
     def generateEnemy(self):
         for pos in self.enemyPositions:
@@ -95,16 +94,12 @@ class LevelController:
                          (50, 0)))
 
     def generatePress(self):
-        for pos in self.pressPos:
-            self.presses.append(
-                Press(PressUp((pos, -1),
-                              2,
-                              self.resourceProvider.getResource("pressUp"),
-                              None),
-                      PressDown((pos, (272 * 2) - 1),
-                                2,
-                                self.resourceProvider.getResource("pressDown"),
-                                None)))
+        for xPos in self.pressXPos:
+            self.presses.append(Press(xPos, self.resourceProvider))
+
+    def updateRigidBodies(self):
+        for press in self.presses:
+            self.rigidBodies.append(press.pressUp)
 
     def generateCable(self):
         for pos in self.cablePos:
@@ -178,7 +173,7 @@ class LevelController:
     def drawObjects(self):
         for press in self.presses:
             press.drawActor(self.screen)
-            press.pressUp.playerPressed(self.player)
+            press.playerPressed(self.player)
         for cable in self.cables:
             cable.drawActor(self.screen)
             cable.working(self.player)
@@ -202,6 +197,7 @@ class LevelController:
                         self.player.bulletsReceived = self.player.bulletsReceived + 2
 
     def playerAlgorithm(self):
+        self.player.collideWithRigidBody(self.rigidBodies)
         self.player.gravity(self.objects)
         self.player.jump()
         self.player.drawActor(self.screen)

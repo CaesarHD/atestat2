@@ -51,6 +51,7 @@ class Character(Actor):
         self.abilityLastUpdate = 0
         self.onObject = False
         self.currentObject = None
+        self.isBlocked = False
 
     def changeAction(self, action):
         if not self.action == self.actions[action]:
@@ -91,10 +92,10 @@ class Character(Actor):
             self.gravityForce -= 0.3
             if self.gravityForce <= 0.1:
                 self.gravityForce = 0.1
-
-            self.moveUp()
+            if not self.isBlocked:
+                self.moveUp()
             currentPos = self.bounds.topleft[1]
-            if self.preJumpPosition - currentPos > JUMP_HEIGHT:
+            if self.preJumpPosition - currentPos > JUMP_HEIGHT or self.isBlocked:
                 self.isJumping = False
 
     def preJump(self):
@@ -148,7 +149,7 @@ class Character(Actor):
                     self.changeAction("walkArmed")
             if self.isShooting:
                 self.shoot()
-            if not self.walkInPlaceLeft and not self.getCollisionBox().x <= LEFT_MAP_BORDER:
+            if not self.walkInPlaceLeft and not self.getCollisionBox().x <= LEFT_MAP_BORDER and not self.isBlocked:
                 initial = self.bounds.topleft
                 self.bounds.topleft = (initial[0] - self.velocity, initial[1])
 
@@ -164,7 +165,7 @@ class Character(Actor):
                     self.changeAction("walkArmed")
             if self.isShooting:
                 self.shoot()
-            if not self.walkInPlaceRight and not self.bounds.x >= (SCREEN_WIDTH - self.bounds.size[1]):
+            if not self.walkInPlaceRight and not self.bounds.x >= (SCREEN_WIDTH - self.bounds.size[1]) and not self.isBlocked:
                 initial = self.bounds.topleft
                 self.bounds.topleft = (initial[0] + self.velocity, initial[1])
 
@@ -201,15 +202,14 @@ class Character(Actor):
         self.bounds.bottom = obstacle.bounds.top
 
     def gravity(self, obstacles):
-        ok = 0
+
+        self.onObject = False
+
         for obstacle in obstacles:
             if self.isOnObject(obstacle):
-                ok = 1
+                self.onObject = True
                 self.currentObject = obstacle
-        if ok == 1:
-            self.onObject = True
-        else:
-            self.onObject = False
+
         if not self.onObject:
             if not self.isJumping:
                 self.isFalling = True
@@ -219,6 +219,13 @@ class Character(Actor):
             self.placeCharacterOnObject(self.currentObject)
             self.isFalling = False
             self.gravityForce = GFORCE
+
+    def collideWithRigidBody(self, rigidBodies):
+        self.isBlocked = False
+        for body in rigidBodies:
+            if self.isCollideWith(body):
+                self.isBlocked = True
+
 
     def toggleWeapon(self):
         self.isArmed = not self.isArmed
