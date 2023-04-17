@@ -17,18 +17,20 @@ class Player(Character):
         if key[pygame.K_a]:
             self.walkInPlaceRight = False
             if self.toggleScrollBackgroundLeft():
-                self.scroll -= self.scrollingSpeed
+                if not self.isBlocked:
+                    self.scroll -= self.scrollingSpeed
+                    self.distanceTraveled -= self.scrollingSpeed
                 self.walkInPlaceLeft = True
-                self.distanceTraveled -= self.scrollingSpeed
             else:
                 self.walkInPlaceLeft = False
             self.moveLeft()
         elif key[pygame.K_d]:
             self.walkInPlaceLeft = False
             if self.toggleScrollBackgroundRight():
-                self.scroll += self.scrollingSpeed
+                if not self.isBlocked:
+                    self.scroll += self.scrollingSpeed
+                    self.distanceTraveled += self.scrollingSpeed
                 self.walkInPlaceRight = True
-                self.distanceTraveled += self.scrollingSpeed
             else:
                 self.walkInPlaceRight = False
             self.moveRight()

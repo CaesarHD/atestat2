@@ -40,7 +40,7 @@ class Press:
         collisionHeight = self.pressDown.bounds.top - self.pressUp.bounds.bottom
         collisionArea = Rect(self.pressUp.bounds.x + 10, self.pressUp.bounds.bottom, self.pressUp.bounds.width - 20, collisionHeight)
 
-        if (player.getCollisionBox().colliderect(collisionArea)) and player.bounds.height > collisionArea.height:
+        if (player.getCollisionBox().colliderect(collisionArea)) and player.bounds.height > collisionArea.height and not self.up:
             player.isShot = True
 
     def moving(self):

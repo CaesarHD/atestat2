@@ -196,7 +196,7 @@ class Character(Actor):
         return self.getCollisionBox().colliderect(obstacle.getCollisionBox())
 
     def isOnObject(self, obstacle):
-        return self.bounds.bottom + self.gravityForce > obstacle.bounds.top and obstacle.getCollisionBox().topleft < self.getCollisionBox().topleft < obstacle.getCollisionBox().topright
+        return self.bounds.bottom + self.gravityForce > obstacle.bounds.top and obstacle.getCollisionBox().topleft < self.getCollisionBox().topright and self.getCollisionBox().topleft < obstacle.getCollisionBox().topright
 
     def placeCharacterOnObject(self, obstacle):
         self.bounds.bottom = obstacle.bounds.top

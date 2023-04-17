@@ -25,7 +25,7 @@ class LevelController:
         self.level = Levels()
         self.lvl = 2
         self.resourceProvider = self.level.loadResourcesLevel(self.lvl)
-        self.player = Player((0, 100), 2, self.resourceProvider.getResource("player"), 5, 42, (50, 0))
+        self.player = Player((0, 100), 2, self.resourceProvider.getResource("player"), 5, 42, (35, 0))
         self.rubinEnemies = []
         self.enemyPositions = self.level.rubinEnemyPos
         self.staticBackground = Background((0, 0), 2, self.resourceProvider.getResource("staticBackground"))
@@ -159,9 +159,9 @@ class LevelController:
 
     def scrollScene(self):
         offset = 2 * SCROLLING_SPEED
-        if self.player.walkInPlaceLeft:
+        if self.player.walkInPlaceLeft and not self.player.isBlocked:
             self.scrollActors(offset)
-        if self.player.walkInPlaceRight:
+        if self.player.walkInPlaceRight and not self.player.isBlocked:
             self.scrollActors(-offset)
 
     def drawCharacters(self):
