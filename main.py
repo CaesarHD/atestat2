@@ -71,8 +71,6 @@ def main():
         else:
             gameOver()
 
-        levelController.ui.renderUI(levelController.player, levelController.screen)
-
         pygame.display.update()
 
     pygame.quit()

@@ -42,7 +42,7 @@ class LevelController:
         self.ui = UI()
         self.guardianPosition = self.level.guardiansPos
         self.guardians = []
-        self.guardianEnemy = []
+        self.guardianEnemy = [self.player]
         # self.guardianEnemy.append(self.player)
         self.pressXPos = self.level.pressPos
         self.presses = []
@@ -55,6 +55,7 @@ class LevelController:
         self.guardianBulletTarget = []
         self.guardianBulletTarget.append(self.player)
         self.rigidBodies = []
+        self.isInMenu = False
 
     def generateEnemy(self):
         for pos in self.enemyPositions:
@@ -222,18 +223,29 @@ class LevelController:
             guardian.drawActor(self.screen)
 
     def tickGame(self):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                self.running = False
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    self.isInMenu = not self.isInMenu
+
+            if not self.isInMenu:
+                self.player.keyDownInputEvent(event)
+
+        if self.isInMenu:
+            self.menu()
+            return
+
         self.updateActorsAnimation()
         self.player.abilityTimer()
-        self.handleInputEvent()
+        self.player.keyPessedInputEvent()
         self.drawCharacters()
         self.scrollScene()
+        self.ui.renderUI(self.player, self.screen)
 
     def levelUp(self):
         self.lvl += 1
 
-    def handleInputEvent(self):
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                self.running = False
-            self.player.keyDownInputEvent(event)
-        self.player.keyPessedInputEvent()
+    def menu(self):
+        self.screen.fill('red')
