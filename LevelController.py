@@ -43,7 +43,7 @@ class LevelController:
         self.guardianPosition = self.level.guardiansPos
         self.guardians = []
         self.guardianEnemy = []
-        self.guardianEnemy.append(self.player)
+        # self.guardianEnemy.append(self.player)
         self.pressXPos = self.level.pressPos
         self.presses = []
         self.objects = []
