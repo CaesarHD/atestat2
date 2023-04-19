@@ -28,7 +28,7 @@ clock = pygame.time.Clock()
 screen = Screen(800 * 1.42, 480 * 1.33)
 level = Levels()
 actors = []
-levelController = LevelController(screen, actors)
+levelController = LevelController(screen, 1, actors)
 nextLevel = False
 SCROLLING_SPEED = 4
 
@@ -40,12 +40,13 @@ lastUpdate = pygame.time.get_ticks()
 
 # guardian = Guardian((1000, 100), 2, resourceProvider.getResource("guardian"), 5, 42, (15, 0))
 
-levelController = LevelController(screen, actors)
+lvl = 1
 
 
 def main():
     global levelController
     global nextLevel
+    global lvl
 
     levelController.generateEnemy()
     levelController.generateGuardian()
@@ -54,13 +55,23 @@ def main():
     levelController.updateActorsList()
     levelController.updateObjectsList()
     levelController.updateRigidBodies()
+    levelController.isLevelZero = True
 
     while levelController.running:
+        nextLevel = levelController.nextLevel()
         if nextLevel:
-            levelController.levelUp()
-            levelController = LevelController(screen, actors)
+            lvl = levelController.levelUp()
+            levelController = LevelController(screen, lvl, actors)
             levelController.generateEnemy()
+            levelController.generateGuardian()
+            levelController.generatePress()
+            levelController.generateCable()
+            levelController.updateActorsList()
+            levelController.updateObjectsList()
+            levelController.updateRigidBodies()
             nextLevel = False
+
+        print(levelController.lvl)
 
         clock.tick(60)
 

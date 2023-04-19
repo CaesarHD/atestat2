@@ -37,6 +37,12 @@ class Storage:
         self.playerShipSpriteSheet = 'Images/Alien_Ship/spritesheet.png'
         self.playerShipAnimationFrames = [1, 1, 1, 1]
         self.playerShipFrameSize = (485, 197)
+        self.lvl0BackgroundSpritesheet = 'Images/Levels/LEVEL_0/BackgroundMain.png'
+        self.lvl0BackgroundSize = (569, 320)
+        self.pressKeyTextSpriteSheet = 'Images/Levels/LEVEL_0/PressKey.png'
+        self.pressKeyTextSize = (569, 320)
+        self.vitaexLogoSpritesheet = 'Images/Levels/LEVEL_0/VITAEX.png'
+        self.vitaexLogoSize = (569, 320)
         self.lvl1GroundSize = (1138, 38)
         self.lvl1StaticBackgroundSpritesheet = 'Images/Levels/LEVEL_1/BACKGROUND.png'
         self.lvl1StaticBackgroundSize = (569, 320)

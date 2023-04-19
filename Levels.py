@@ -24,6 +24,15 @@ class Levels:
         self.pipePose = []
         self.cablePos = []
 
+    def loadResourcesLevel0(self):
+        self.resourceProvider.registerResource("staticBackground", self.storage.lvl0BackgroundSpritesheet, [1],
+                                               self.storage.lvl0BackgroundSize, None, None, None)
+        self.resourceProvider.registerResource("vitaexLogo", self.storage.vitaexLogoSpritesheet, [1],
+                                               self.storage.vitaexLogoSize, None, None, None)
+        self.resourceProvider.registerResource("pressKey", self.storage.pressKeyTextSpriteSheet, [1],
+                                               self.storage.pressKeyTextSize, None, None, None)
+
+
     def loadResourcesLevel1(self):
         self.resourceProvider.registerResource("rubinEnemy", self.storage.rubinEnemySpriteSheet,
                                                self.storage.rubinEnemyAnimationFrames, self.storage.rubinEnemyFrameSize,
@@ -129,6 +138,8 @@ class Levels:
 
     def loadResourcesLevel(self, level):
         match level:
+            case 0:
+                self.loadResourcesLevel0()
             case 1:
                 self.loadResourcesLevel1()
             case 2:

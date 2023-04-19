@@ -7,6 +7,7 @@ from Character import Character
 from Enemy import Enemy
 from Ground import Ground
 from Guardian import Guardian
+from LevelZero import LevelZero
 from Levels import Levels
 from Player import Player
 from Press import Press
@@ -17,13 +18,14 @@ RUBIN_ENEMY_BULLET_SPAWN_LOCATION = 30
 RUBIN_ENEMY_SIZE = 2
 lastUpdate = pygame.time.get_ticks()
 SCROLLING_SPEED = 4
+SCREEN_WIDTH = 800 * 1.42
 
 
 class LevelController:
-    def __init__(self, screen, actors):
+    def __init__(self, screen, lvl, actors):
         self.screen = screen
         self.level = Levels()
-        self.lvl = 2
+        self.lvl = lvl
         self.resourceProvider = self.level.loadResourcesLevel(self.lvl)
         self.player = Player((0, 100), 2, self.resourceProvider.getResource("player"), 5, 42, (35, 0))
         self.rubinEnemies = []
@@ -37,7 +39,7 @@ class LevelController:
         self.actors = actors
         self.scroll = self.player.scroll
         self.playerOpponents = self.rubinEnemies
-        self.enemyOpponents = [self.player]
+        self.enemyOpponents = []
         self.running = True
         self.ui = UI()
         self.guardianPosition = self.level.guardiansPos
@@ -56,6 +58,18 @@ class LevelController:
         self.guardianBulletTarget.append(self.player)
         self.rigidBodies = []
         self.isInMenu = False
+        self.isLevelZero = False
+        self.lvlZero = LevelZero()
+
+    def levelZero(self):
+        resourceProvider = self.level.loadResourcesLevel(0)
+        staticBackground = Background((0, 0), 2, resourceProvider.getResource("staticBackground"))
+        vitaexLogo = Actor((0, 0), 2, resourceProvider.getResource("vitaexLogo"), None)
+        pressKey = Actor((0, 0), 2, resourceProvider.getResource("pressKey"), None)
+
+        staticBackground.drawActor(self.screen)
+        vitaexLogo.drawActor(self.screen)
+        pressKey.drawActor(self.screen)
 
     def generateEnemy(self):
         for pos in self.enemyPositions:
@@ -226,15 +240,23 @@ class LevelController:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running = False
-            if event.type == pygame.KEYDOWN:
+            if self.isLevelZero:
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_p:
+                        self.isLevelZero = False
+            elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     self.isInMenu = not self.isInMenu
 
-            if not self.isInMenu:
+            if not self.isInMenu and not self.isLevelZero:
                 self.player.keyDownInputEvent(event)
 
         if self.isInMenu:
             self.menu()
+            return
+
+        if self.isLevelZero:
+            self.lvlZero.drawLevel(self.screen)
             return
 
         self.updateActorsAnimation()
@@ -244,8 +266,17 @@ class LevelController:
         self.scrollScene()
         self.ui.renderUI(self.player, self.screen)
 
+    def nextLevel(self):
+        if self.player.bounds.x >= (SCREEN_WIDTH - self.player.bounds.size[1]) - 2:
+            return True
+        return False
+
     def levelUp(self):
         self.lvl += 1
+        return self.lvl
 
     def menu(self):
-        self.screen.fill('red')
+        img = pygame.Surface((800 * 1.42, 480 * 1.33))
+        img.set_alpha(128)
+        img.fill((0, 0, 0))
+        self.screen.blit(img, (0, 0))
