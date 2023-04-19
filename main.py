@@ -27,18 +27,13 @@ pygame.init()
 clock = pygame.time.Clock()
 screen = Screen(800 * 1.42, 480 * 1.33)
 level = Levels()
-actors = []
-levelController = LevelController(screen, 1, actors)
+levelController = LevelController(screen, 1)
 nextLevel = False
 SCROLLING_SPEED = 4
 
-# playerShip = Actor((0, 0), 1.5, resourceProvider.getResource("playerShip"), None)
-
-rubinEnemies = levelController.rubinEnemies
 
 lastUpdate = pygame.time.get_ticks()
 
-# guardian = Guardian((1000, 100), 2, resourceProvider.getResource("guardian"), 5, 42, (15, 0))
 
 lvl = 1
 
@@ -61,7 +56,7 @@ def main():
         nextLevel = levelController.nextLevel()
         if nextLevel:
             lvl = levelController.levelUp()
-            levelController = LevelController(screen, lvl, actors)
+            levelController = LevelController(screen, lvl)
             levelController.generateEnemy()
             levelController.generateGuardian()
             levelController.generatePress()
@@ -70,8 +65,6 @@ def main():
             levelController.updateObjectsList()
             levelController.updateRigidBodies()
             nextLevel = False
-
-        print(levelController.lvl)
 
         clock.tick(60)
 

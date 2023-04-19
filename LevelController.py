@@ -22,7 +22,7 @@ SCREEN_WIDTH = 800 * 1.42
 
 
 class LevelController:
-    def __init__(self, screen, lvl, actors):
+    def __init__(self, screen, lvl):
         self.screen = screen
         self.level = Levels()
         self.lvl = lvl
@@ -36,7 +36,7 @@ class LevelController:
         self.mines = self.player.mines
         self.explosions = []
         self.explosionPos = 0
-        self.actors = actors
+        self.actors = []
         self.scroll = self.player.scroll
         self.playerOpponents = self.rubinEnemies
         self.enemyOpponents = []
@@ -242,7 +242,7 @@ class LevelController:
                 self.running = False
             if self.isLevelZero:
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_p:
+                    if event.key == pygame.K_RETURN:
                         self.isLevelZero = False
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
