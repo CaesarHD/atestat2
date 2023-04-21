@@ -207,6 +207,7 @@ class LevelController:
         for cable in self.cables:
             cable.drawActor(self.screen)
             cable.working(self.player)
+        self.player.drawMine(self.screen)
 
     def enemyAlgorithm(self):
         for enemy in self.rubinEnemies:
@@ -231,7 +232,6 @@ class LevelController:
         self.player.jump()
         self.player.updateBullet(self.actors, self.playerOpponents, self.screen)
         self.player.placingMine()
-        self.player.drawMine(self.screen)
         self.mineExplosion()
         self.drawExplosion()
 

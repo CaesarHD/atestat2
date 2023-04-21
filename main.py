@@ -34,6 +34,8 @@ SCROLLING_SPEED = 4
 
 lastUpdate = pygame.time.get_ticks()
 
+ashes = False
+
 
 lvl = 1
 
@@ -82,6 +84,7 @@ def main():
 
 def gameOver():
     global lastUpdate
+    global ashes
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -89,18 +92,19 @@ def gameOver():
     currentTime = pygame.time.get_ticks()
     if currentTime - lastUpdate > levelController.player.animationCooldown:
         if not levelController.player.isDead:
-            levelController.player.tickAnimation()
-        for enemy in levelController.rubinEnemies:
-            enemy.tickAnimation()
+            levelController.updateActorsAnimation()
+            levelController.ui.renderUI(levelController.player, levelController.screen)
         lastUpdate = currentTime
     levelController.player.die()
     levelController.player.drawActor(screen)
-    for enemy in levelController.rubinEnemies:
-        enemy.moving(levelController.player)
-        enemy.drawActor(levelController.screen)
-    for mine in levelController.mines:
-        mine.drawActor(levelController.screen)
+    levelController.drawObjects()
+    levelController.drawCharacters()
     levelController.updateActorsAnimation()
+    if levelController.player.frame == levelController.player.deathLastFrame and not ashes:
+        ashes = True
+    if ashes:
+        levelController.player.frame = levelController.player.deathLastFrame
+    levelController.ui.renderUI(levelController.player, levelController.screen)
 
 
 if __name__ == '__main__':
