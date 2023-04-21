@@ -1,5 +1,5 @@
 import pygame
-
+import msvcrt as m
 from Actor import Actor
 from Background import Background
 from Cable import Cable
@@ -21,6 +21,14 @@ SCROLLING_SPEED = 4
 SCREEN_WIDTH = 800 * 1.42
 
 
+def checkForKeyPress():
+    keys = pygame.key.get_pressed()
+    if not any(keys):
+        return False
+    else:
+        return True
+
+
 class LevelController:
     def __init__(self, screen, lvl):
         self.screen = screen
@@ -39,7 +47,7 @@ class LevelController:
         self.actors = []
         self.scroll = self.player.scroll
         self.playerOpponents = self.rubinEnemies
-        self.enemyOpponents = []
+        self.enemyOpponents = [self.player]
         self.running = True
         self.ui = UI()
         self.guardianPosition = self.level.guardiansPos
@@ -80,7 +88,6 @@ class LevelController:
                       RUBIN_ENEMY_BULLET_SIZE,
                       RUBIN_ENEMY_BULLET_SPAWN_LOCATION,
                       (50, 0)))
-
 
     def updateActorsList(self):
         for enemy in self.rubinEnemies:
@@ -171,7 +178,6 @@ class LevelController:
         for explosion in self.explosions:
             explosion.scrolling(offset)
 
-
     def scrollScene(self):
         offset = 2 * SCROLLING_SPEED
         if self.player.walkInPlaceLeft and not self.player.isBlocked:
@@ -179,11 +185,20 @@ class LevelController:
         if self.player.walkInPlaceRight and not self.player.isBlocked:
             self.scrollActors(-offset)
 
-    def drawCharacters(self):
-        self.drawObjects()
+    def characterAI(self):
         self.enemyAlgorithm()
         self.guardianAlgorithm()
         self.playerAlgorithm()
+
+    def drawCharacters(self):
+        self.drawObjects()
+        for enemy in self.rubinEnemies:
+            enemy.drawActor(self.screen)
+            enemy.drawBullets(self.screen)
+        for guardian in self.guardians:
+            guardian.drawActor(self.screen)
+        self.player.drawActor(self.screen)
+        self.player.drawBullets(self.screen)
 
     def drawObjects(self):
         for press in self.presses:
@@ -198,12 +213,11 @@ class LevelController:
             if not enemy.isShot:
                 enemy.gravity(self.objects)
                 enemy.moving(self.player)
-                enemy.drawActor(self.screen)
                 enemy.updateBullet(self.enemyBulletTarget, self.enemyOpponents, self.screen)
             else:
                 enemy.die()
                 if not enemy.isDead:
-                    enemy.drawActor(self.screen)
+                    continue
                 else:
                     self.rubinEnemies.remove(enemy)
                     self.actors.remove(enemy)
@@ -215,7 +229,6 @@ class LevelController:
         self.player.collideWithRigidBody(self.rigidBodies)
         self.player.gravity(self.objects)
         self.player.jump()
-        self.player.drawActor(self.screen)
         self.player.updateBullet(self.actors, self.playerOpponents, self.screen)
         self.player.placingMine()
         self.player.drawMine(self.screen)
@@ -234,15 +247,13 @@ class LevelController:
                 guardian.isShooting = False
             guardian.inIdle()
 
-            guardian.drawActor(self.screen)
-
     def tickGame(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running = False
             if self.isLevelZero:
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_RETURN:
+                    if checkForKeyPress():
                         self.isLevelZero = False
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
@@ -262,6 +273,7 @@ class LevelController:
         self.updateActorsAnimation()
         self.player.abilityTimer()
         self.player.keyPessedInputEvent()
+        self.characterAI()
         self.drawCharacters()
         self.scrollScene()
         self.ui.renderUI(self.player, self.screen)
@@ -276,7 +288,9 @@ class LevelController:
         return self.lvl
 
     def menu(self):
+        self.drawCharacters()
+        self.ui.drawUI(self.screen)
         img = pygame.Surface((800 * 1.42, 480 * 1.33))
-        img.set_alpha(128)
+        img.set_alpha(150)
         img.fill((0, 0, 0))
         self.screen.blit(img, (0, 0))

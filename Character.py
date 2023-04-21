@@ -267,10 +267,13 @@ class Character(Actor):
         for bullet in self.bullets:
             if not bullet.out:
                 bullet.propell(objects, characters, screen)
-                bullet.drawActor(screen)
             else:
                 self.bullets.remove(bullet)
                 del bullet
+
+    def drawBullets(self, screen):
+        for bullet in self.bullets:
+            bullet.drawActor(screen)
 
     def die(self):
         if self.isJumping or self.isFalling:
