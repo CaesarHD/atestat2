@@ -74,10 +74,12 @@ class LevelController:
         staticBackground = Background((0, 0), 2, resourceProvider.getResource("staticBackground"))
         vitaexLogo = Actor((0, 0), 2, resourceProvider.getResource("vitaexLogo"), None)
         pressKey = Actor((0, 0), 2, resourceProvider.getResource("pressKey"), None)
+        voyager = Actor((0, 0), 2, resourceProvider.getResource("voyager"), None)
 
         staticBackground.drawActor(self.screen)
         vitaexLogo.drawActor(self.screen)
         pressKey.drawActor(self.screen)
+        voyager.drawActor(self.screen)
 
     def generateEnemy(self):
         for pos in self.enemyPositions:

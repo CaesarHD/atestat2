@@ -31,7 +31,10 @@ class Levels:
                                                self.storage.vitaexLogoSize, None, None, None)
         self.resourceProvider.registerResource("pressKey", self.storage.pressKeyTextSpriteSheet, [1],
                                                self.storage.pressKeyTextSize, None, None, None)
-
+        self.resourceProvider.registerResource("voyager", self.storage.voyagerSpritesheet, [1],
+                                               self.storage.voyagerSize, None, None, None)
+        self.resourceProvider.registerResource("asteroid", self.storage.asteroidSpritesheet, [1],
+                                               self.storage.asteroidSize, None, None, None)
 
     def loadResourcesLevel1(self):
         self.resourceProvider.registerResource("rubinEnemy", self.storage.rubinEnemySpriteSheet,
@@ -116,7 +119,8 @@ class Levels:
         self.resourceProvider.registerResource("gunIcon", self.storage.gunIconSpritesheet,
                                                self.storage.gunIconFrames, self.storage.abilityIconSize,
                                                self.action.getActions("playerGunStates"), None, None)
-        self.resourceProvider.registerResource("pressUp", self.storage.lvl2PressUpSpriteSheet, [1], self.storage.lvl2PressUpSize,
+        self.resourceProvider.registerResource("pressUp", self.storage.lvl2PressUpSpriteSheet, [1],
+                                               self.storage.lvl2PressUpSize,
                                                None, None, None)
         self.resourceProvider.registerResource("pressDown", self.storage.lvl2PressDownSpriteSheet, [1],
                                                self.storage.lvl2PressDownSize,
@@ -124,10 +128,12 @@ class Levels:
         self.resourceProvider.registerResource("pipe", self.storage.lvl2PipeSpritesheet, [1],
                                                self.storage.lvl2PipeSize,
                                                None, None, None)
-        self.resourceProvider.registerResource("laser", self.storage.lvl2LaserSpritesheet, self.storage.lvl2LaserAnimationFrames,
+        self.resourceProvider.registerResource("laser", self.storage.lvl2LaserSpritesheet,
+                                               self.storage.lvl2LaserAnimationFrames,
                                                self.storage.lvl2LaserSize,
                                                None, None, None)
-        self.resourceProvider.registerResource("cable", self.storage.lvl2CableSpritesheet, [6], self.storage.lvl2CableSize, None, None, None)
+        self.resourceProvider.registerResource("cable", self.storage.lvl2CableSpritesheet, [6],
+                                               self.storage.lvl2CableSize, None, None, None)
         self.gatePos = []
         self.cablePos = [700]
         self.pressPos = [1500]

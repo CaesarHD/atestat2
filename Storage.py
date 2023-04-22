@@ -43,6 +43,10 @@ class Storage:
         self.pressKeyTextSize = (569, 320)
         self.vitaexLogoSpritesheet = 'Images/Levels/LEVEL_0/VITAEX.png'
         self.vitaexLogoSize = (569, 320)
+        self.voyagerSpritesheet = 'Images/Levels/LEVEL_0/Voyager_Sonda.png'
+        self.voyagerSize = (122, 180)
+        self.asteroidSpritesheet = 'Images/Levels/LEVEL_0/Asteroid.png'
+        self.asteroidSize = (82, 82)
         self.lvl1GroundSize = (1138, 38)
         self.lvl1StaticBackgroundSpritesheet = 'Images/Levels/LEVEL_1/BACKGROUND.png'
         self.lvl1StaticBackgroundSize = (569, 320)
