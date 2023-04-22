@@ -99,6 +99,7 @@ def gameOver():
     levelController.player.drawActor(screen)
     levelController.drawObjects()
     levelController.drawCharacters()
+    levelController.movingPresses()
     levelController.updateActorsAnimation()
     if levelController.player.frame == levelController.player.deathLastFrame and not ashes:
         ashes = True

@@ -9,12 +9,12 @@ class Press:
         self.up = True
         self.offset = pressPosYOffset
 
-        self.pressUp = Actor((pressPosX, -1 - pressPosYOffset),
+        self.pressUp = Actor((pressPosX, -2 - pressPosYOffset),
                              2,
                              resourceProvider.getResource("pressUp"),
                              None)
 
-        self.pressDown = Actor((pressPosX, (272 * 2) - 1),
+        self.pressDown = Actor((pressPosX, (272 * 2) - 2),
                                2,
                                resourceProvider.getResource("pressDown"),
                                None)

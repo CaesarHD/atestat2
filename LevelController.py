@@ -197,7 +197,6 @@ class LevelController:
         self.playerAlgorithm()
 
     def drawCharacters(self):
-        self.drawObjects()
         for enemy in self.rubinEnemies:
             enemy.drawActor(self.screen)
             enemy.drawBullets(self.screen)
@@ -209,12 +208,15 @@ class LevelController:
     def drawObjects(self):
         for press in self.presses:
             press.drawActor(self.screen)
-            press.moving()
             press.playerPressed(self.player)
         for cable in self.cables:
             cable.drawActor(self.screen)
             cable.working(self.player)
         self.player.drawMine(self.screen)
+
+    def movingPresses(self):
+        for press in self.presses:
+            press.moving()
 
     def enemyAlgorithm(self):
         for enemy in self.rubinEnemies:
@@ -281,7 +283,10 @@ class LevelController:
         self.player.abilityTimer()
         self.player.keyPessedInputEvent()
         self.characterAI()
+        self.drawObjects()
+        self.drawObjects()
         self.drawCharacters()
+        self.movingPresses()
         self.scrollScene()
         self.ui.renderUI(self.player, self.screen)
 
@@ -296,6 +301,7 @@ class LevelController:
 
     def menu(self):
         global lastUpdate
+        self.drawObjects()
         self.drawCharacters()
         self.ui.drawUI(self.screen)
         img = pygame.Surface((800 * 1.42, 480 * 1.33))
@@ -303,6 +309,7 @@ class LevelController:
         img.fill((0, 0, 0))
         self.screen.blit(img, (0, 0))
         self.menuText.drawActor(self.screen)
+
         currentTime = pygame.time.get_ticks()
         if currentTime - lastUpdate > self.player.animationCooldown:
             self.menuText.tickAnimation()
