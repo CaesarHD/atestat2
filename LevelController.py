@@ -55,6 +55,7 @@ class LevelController:
         self.guardianEnemy = [self.player]
         # self.guardianEnemy.append(self.player)
         self.pressXPos = self.level.pressPos
+        self.pressYOffset = self.level.pressOffset
         self.presses = []
         self.objects = []
         self.objects.append(self.ground)
@@ -118,8 +119,10 @@ class LevelController:
                          (50, 0)))
 
     def generatePress(self):
+        index = 0
         for xPos in self.pressXPos:
-            self.presses.append(Press(xPos, self.resourceProvider))
+            self.presses.append(Press(xPos, self.pressYOffset[index], self.resourceProvider))
+            index += 1
 
     def updateRigidBodies(self):
         for press in self.presses:

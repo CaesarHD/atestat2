@@ -3,19 +3,21 @@ import pygame
 from Actor import Actor
 from pygame import Rect
 
-class Press:
-    def __init__(self, pressPosX, resourceProvider):
-        self.up = True
 
-        self.pressUp = Actor((pressPosX, -1),
-                2,
-                resourceProvider.getResource("pressUp"),
-                None)
+class Press:
+    def __init__(self, pressPosX, pressPosYOffset, resourceProvider):
+        self.up = True
+        self.offset = pressPosYOffset
+
+        self.pressUp = Actor((pressPosX, -1 - pressPosYOffset),
+                             2,
+                             resourceProvider.getResource("pressUp"),
+                             None)
 
         self.pressDown = Actor((pressPosX, (272 * 2) - 1),
-                  2,
-                  resourceProvider.getResource("pressDown"),
-                  None)
+                               2,
+                               resourceProvider.getResource("pressDown"),
+                               None)
 
     def drawActor(self, screen):
         self.moving()
@@ -32,15 +34,12 @@ class Press:
             self.up = False
 
     def playerPressed(self, player):
-        # collidesWiothTop = self.pressUp.getCollisionBox().bottom >= player.getCollisionBox().top
-        # playerBetweenPress = self.pressUp.getCollisionBox().topleft < player.getCollisionBox().topleft < self.pressUp.getCollisionBox().topright
-        #
-        # if collidesWiothTop and playerBetweenPress:
-        #     player.isShot = True
         collisionHeight = self.pressDown.bounds.top - self.pressUp.bounds.bottom
-        collisionArea = Rect(self.pressUp.bounds.x + 10, self.pressUp.bounds.bottom, self.pressUp.bounds.width - 20, collisionHeight)
+        collisionArea = Rect(self.pressUp.bounds.x + 10, self.pressUp.bounds.bottom, self.pressUp.bounds.width - 20,
+                             collisionHeight)
 
-        if (player.getCollisionBox().colliderect(collisionArea)) and player.bounds.height > collisionArea.height and not self.up:
+        if (player.getCollisionBox().colliderect(
+                collisionArea)) and player.bounds.height > collisionArea.height and not self.up:
             player.isShot = True
 
     def moving(self):
@@ -49,8 +48,3 @@ class Press:
             self.pressUp.moveUp(5)
         else:
             self.pressUp.moveDown(7)
-
-
-
-
-

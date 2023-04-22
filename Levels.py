@@ -20,6 +20,7 @@ class Levels:
         self.guardiansPos = []
         self.gatePos = []
         self.pressPos = []
+        self.pressOffset = []
         self.laserPos = []
         self.pipePose = []
         self.cablePos = []
@@ -135,8 +136,9 @@ class Levels:
         self.resourceProvider.registerResource("cable", self.storage.lvl2CableSpritesheet, [6],
                                                self.storage.lvl2CableSize, None, None, None)
         self.gatePos = []
-        self.cablePos = [700]
-        self.pressPos = [1500]
+        self.cablePos = [700, 2100, 2400]
+        self.pressPos = [1500, 1650, 1800, 2750, 2900]
+        self.pressOffset = [0, 250, 50, 0, 300]
         self.laserPos = []
         self.pipePose = []
         self.rubinEnemyPos = []
@@ -147,7 +149,7 @@ class Levels:
             case 0:
                 self.loadResourcesLevel0()
             case 1:
-                self.loadResourcesLevel1()
-            case 2:
                 self.loadResourcesLevel2()
+            case 2:
+                self.loadResourcesLevel1()
         return self.resourceProvider
