@@ -1,9 +1,8 @@
 import pygame
-import msvcrt as m
+
 from Actor import Actor
 from Background import Background
 from Cable import Cable
-from Character import Character
 from Enemy import Enemy
 from Ground import Ground
 from Guardian import Guardian
@@ -12,6 +11,7 @@ from Levels import Levels
 from Player import Player
 from Press import Press
 from UI import UI
+
 
 RUBIN_ENEMY_BULLET_SIZE = 3.5
 RUBIN_ENEMY_BULLET_SPAWN_LOCATION = 30
@@ -69,6 +69,7 @@ class LevelController:
         self.isInMenu = False
         self.isLevelZero = False
         self.lvlZero = LevelZero()
+        self.menuText = Actor((20, 570), 2, self.resourceProvider.getResource("pauseTextMenu"), None)
 
     def levelZero(self):
         resourceProvider = self.level.loadResourcesLevel(0)
@@ -208,6 +209,7 @@ class LevelController:
     def drawObjects(self):
         for press in self.presses:
             press.drawActor(self.screen)
+            press.moving()
             press.playerPressed(self.player)
         for cable in self.cables:
             cable.drawActor(self.screen)
@@ -293,9 +295,15 @@ class LevelController:
         return self.lvl
 
     def menu(self):
+        global lastUpdate
         self.drawCharacters()
         self.ui.drawUI(self.screen)
         img = pygame.Surface((800 * 1.42, 480 * 1.33))
         img.set_alpha(150)
         img.fill((0, 0, 0))
         self.screen.blit(img, (0, 0))
+        self.menuText.drawActor(self.screen)
+        currentTime = pygame.time.get_ticks()
+        if currentTime - lastUpdate > self.player.animationCooldown:
+            self.menuText.tickAnimation()
+            lastUpdate = currentTime

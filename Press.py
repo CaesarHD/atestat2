@@ -20,7 +20,6 @@ class Press:
                                None)
 
     def drawActor(self, screen):
-        self.moving()
         self.pressUp.drawActor(screen)
         self.pressDown.drawActor(screen)
 

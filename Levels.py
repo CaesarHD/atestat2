@@ -75,6 +75,9 @@ class Levels:
         self.resourceProvider.registerResource("gunIcon", self.storage.gunIconSpritesheet,
                                                self.storage.gunIconFrames, self.storage.abilityIconSize,
                                                self.action.getActions("playerGunStates"), None, None)
+        self.resourceProvider.registerResource("pauseTextMenu", self.storage.menuTextSpritesheet,
+                                               self.storage.menuTextAnimationFrames,
+                                               self.storage.menuTextSize, None, None, None)
         self.rubinEnemyPos = [3000, 4000, 4500, 5500, 6000, 6100, 7000, 7200, 7500, 9000, 9500, 10000, 10100,
                               12000, 13000, 13100, 14500, 14900, 17000, 17100, 17200, 17800, 20000, 20100, 20500, 21000,
                               21050, 21100, 21500, 22000]
@@ -135,6 +138,9 @@ class Levels:
                                                None, None, None)
         self.resourceProvider.registerResource("cable", self.storage.lvl2CableSpritesheet, [6],
                                                self.storage.lvl2CableSize, None, None, None)
+        self.resourceProvider.registerResource("pauseTextMenu", self.storage.menuTextSpritesheet,
+                                               self.storage.menuTextAnimationFrames,
+                                               self.storage.menuTextSize, None, None, None)
         self.gatePos = []
         self.cablePos = [700, 2100, 2400]
         self.pressPos = [1500, 1650, 1800, 2750, 2900]

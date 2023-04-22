@@ -86,6 +86,9 @@ class Storage:
         self.lvl2DinamicBackgroundSize = (569, 320)
         self.lvl2DinamicBackgroundAnimationFrames = [1, 1, 1]
         self.lvl2GroundSpritesheet = 'Images/Levels/LEVEL_2/FISIERE_VITAEX_LVL2/Background/FLOOR.png'
+        self.menuTextSpritesheet = 'Images/Levels/Menu/spritesheet (24).png'
+        self.menuTextAnimationFrames = [7]
+        self.menuTextSize = (107, 31)
 
     def getResource(self):
         return self.resourceProvider
