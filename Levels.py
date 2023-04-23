@@ -155,7 +155,7 @@ class Levels:
             case 0:
                 self.loadResourcesLevel0()
             case 1:
-                self.loadResourcesLevel2()
-            case 2:
                 self.loadResourcesLevel1()
+            case 2:
+                self.loadResourcesLevel2()
         return self.resourceProvider

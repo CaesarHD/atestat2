@@ -260,6 +260,9 @@ class LevelController:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running = False
+            if not self.isInMenu and not self.isLevelZero:
+                self.player.keyDownInputEvent(event)
+
             if self.isLevelZero:
                 if event.type == pygame.KEYDOWN:
                     if checkForKeyPress():
@@ -267,9 +270,6 @@ class LevelController:
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     self.isInMenu = not self.isInMenu
-
-            if not self.isInMenu and not self.isLevelZero:
-                self.player.keyDownInputEvent(event)
 
         if self.isInMenu:
             self.menu()
