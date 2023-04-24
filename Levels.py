@@ -22,7 +22,7 @@ class Levels:
         self.pressPos = []
         self.pressOffset = []
         self.laserPos = []
-        self.pipePose = []
+        self.pipePos = []
         self.cablePos = []
 
     def loadResourcesLevel0(self):
@@ -129,7 +129,7 @@ class Levels:
         self.resourceProvider.registerResource("pressDown", self.storage.lvl2PressDownSpriteSheet, [1],
                                                self.storage.lvl2PressDownSize,
                                                None, None, None)
-        self.resourceProvider.registerResource("pipe", self.storage.lvl2PipeSpritesheet, [1],
+        self.resourceProvider.registerResource("pipe", self.storage.lvl2PipeSpritesheet, [1, 5],
                                                self.storage.lvl2PipeSize,
                                                None, None, None)
         self.resourceProvider.registerResource("laser", self.storage.lvl2LaserSpritesheet,
@@ -145,8 +145,8 @@ class Levels:
         self.cablePos = [700, 2100, 2400]
         self.pressPos = [1500, 1650, 1800, 2750, 2900]
         self.pressOffset = [0, 250, 50, 0, 300]
-        self.laserPos = []
-        self.pipePose = []
+        self.pipePos = [400, 1120, 3000]
+        self.laserPos = [200]
         self.rubinEnemyPos = []
         self.guardiansPos = [1000]
 
@@ -155,7 +155,7 @@ class Levels:
             case 0:
                 self.loadResourcesLevel0()
             case 1:
-                self.loadResourcesLevel1()
+                self.loadResourcesLevel2()
             case 2:
                 self.loadResourcesLevel2()
         return self.resourceProvider

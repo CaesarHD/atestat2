@@ -6,8 +6,10 @@ from Cable import Cable
 from Enemy import Enemy
 from Ground import Ground
 from Guardian import Guardian
+from Laser import Laser
 from LevelZero import LevelZero
 from Levels import Levels
+from Pipe import Pipe
 from Player import Player
 from Press import Press
 from UI import UI
@@ -70,6 +72,10 @@ class LevelController:
         self.isLevelZero = False
         self.lvlZero = LevelZero()
         self.menuText = Actor((20, 570), 2, self.resourceProvider.getResource("pauseTextMenu"), None)
+        self.pipePos = self.level.pipePos
+        self.pipes = []
+        self.lasers = []
+        self.laserPos = self.level.laserPos
 
     def levelZero(self):
         resourceProvider = self.level.loadResourcesLevel(0)
@@ -101,6 +107,10 @@ class LevelController:
         for cable in self.cables:
             self.actors.append(cable)
             self.enemyBulletTarget.append(cable)
+        for pipe in self.pipes:
+            self.actors.append(pipe)
+        for laser in self.lasers:
+            self.actors.append(laser)
         for press in self.presses:
             self.actors.append(press.pressUp)
             self.actors.append(press.pressDown)
@@ -108,6 +118,8 @@ class LevelController:
     def updateObjectsList(self):
         for press in self.presses:
             self.objects.append(press.pressDown)
+        # for laser in self.lasers:
+        #     self.objects.append(laser)
 
     def generateGuardian(self):
         for pos in self.guardianPosition:
@@ -125,6 +137,10 @@ class LevelController:
             self.presses.append(Press(xPos, self.pressYOffset[index], self.resourceProvider))
             index += 1
 
+    def generateLaser(self):
+        for pos in self.laserPos:
+            self.lasers.append(Laser((pos, 0), 2, self.resourceProvider.getResource("laser"), None))
+
     def updateRigidBodies(self):
         for press in self.presses:
             self.rigidBodies.append(press.pressUp)
@@ -134,6 +150,11 @@ class LevelController:
             self.cables.append(Cable((pos, 0), 2,
                                      self.resourceProvider.getResource("cable"),
                                      (20, 250)))
+
+    def generatePipe(self):
+        for pos in self.pipePos:
+            self.pipes.append(Pipe((pos, 0), 2,
+                                   self.resourceProvider.getResource("pipe"), (20, 250)))
 
     def generateExplosion(self, pos):
         self.explosions.append(Actor(pos, 2, self.resourceProvider.getResource('mineExplosion'), None))
@@ -212,11 +233,20 @@ class LevelController:
         for cable in self.cables:
             cable.drawActor(self.screen)
             cable.working(self.player)
+        for pipe in self.pipes:
+            pipe.drawActor(self.screen)
+            pipe.collideWith(self.player)
+        for laser in self.lasers:
+            laser.drawActor(self.screen)
         self.player.drawMine(self.screen)
 
     def movingPresses(self):
         for press in self.presses:
             press.moving()
+
+    def steamGasePipe(self):
+        for pipe in self.pipes:
+            pipe.working()
 
     def enemyAlgorithm(self):
         for enemy in self.rubinEnemies:
@@ -284,9 +314,9 @@ class LevelController:
         self.player.keyPessedInputEvent()
         self.characterAI()
         self.drawObjects()
-        self.drawObjects()
         self.drawCharacters()
         self.movingPresses()
+        self.steamGasePipe()
         self.scrollScene()
         self.ui.renderUI(self.player, self.screen)
 

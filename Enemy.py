@@ -10,8 +10,6 @@ IDLE_ACTOR_DISTANCE = 200
 WALK_PLAYER_DISTANCE = 1000
 PLAYER_DISTANCE = 1200
 
-lastUpdate = 0
-
 
 class Enemy(Character):
     def __init__(self, pos, scale, resource, bulletSize, bulletSpawnLocation, collisionOffset):
@@ -24,9 +22,10 @@ class Enemy(Character):
         self.velocity = 6
         self.isShot = False
         self.isDead = False
-        self.bulletsReceived = 4
+        self.bulletsReceived = 3
         self.idleShootTiming = 500
         self.movingShootTiming = 0
+        self.lastUpdate = 0
 
     def fall(self):
         self.gravityForce += 1.5
@@ -43,11 +42,10 @@ class Enemy(Character):
             self.isRight = False
 
     def tickShoot(self, time):
-        global lastUpdate
         currentTime = pygame.time.get_ticks()
-        if currentTime - lastUpdate > time:
+        if currentTime - self.lastUpdate > time:
             self.isShooting = True
-            lastUpdate = currentTime
+            self.lastUpdate = currentTime
         else:
             self.isShooting = False
 
@@ -80,4 +78,3 @@ class Enemy(Character):
             else:
                 self.shootAndMoving(player)
             self.changeOrientation(player)
-
