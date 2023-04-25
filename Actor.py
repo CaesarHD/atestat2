@@ -32,6 +32,7 @@ class Actor:
         self.stepCounter = 0
         self.scroll = 0
         self.actionChanged = False
+        self.topOffset = 0
 
         for animation in self.animationSteps:
             tempImageList = []

@@ -110,7 +110,8 @@ class LevelController:
         for pipe in self.pipes:
             self.actors.append(pipe)
         for laser in self.lasers:
-            self.actors.append(laser)
+            self.actors.append(laser.laserTop)
+            self.actors.append(laser.laserSlab)
         for press in self.presses:
             self.actors.append(press.pressUp)
             self.actors.append(press.pressDown)
@@ -118,8 +119,8 @@ class LevelController:
     def updateObjectsList(self):
         for press in self.presses:
             self.objects.append(press.pressDown)
-        # for laser in self.lasers:
-        #     self.objects.append(laser)
+        for laser in self.lasers:
+            self.objects.append(laser.laserSlab)
 
     def generateGuardian(self):
         for pos in self.guardianPosition:
@@ -138,8 +139,8 @@ class LevelController:
             index += 1
 
     def generateLaser(self):
-        for pos in self.laserPos:
-            self.lasers.append(Laser((pos, 0), 2, self.resourceProvider.getResource("laser"), None))
+        for posX in self.laserPos:
+            self.lasers.append(Laser(posX, self.resourceProvider))
 
     def updateRigidBodies(self):
         for press in self.presses:
@@ -238,6 +239,7 @@ class LevelController:
             pipe.collideWith(self.player)
         for laser in self.lasers:
             laser.drawActor(self.screen)
+            laser.working()
         self.player.drawMine(self.screen)
 
     def movingPresses(self):
@@ -247,6 +249,10 @@ class LevelController:
     def steamGasePipe(self):
         for pipe in self.pipes:
             pipe.working()
+
+    def laserBurn(self):
+        for laser in self.lasers:
+            laser.playerBurned(self.player)
 
     def enemyAlgorithm(self):
         for enemy in self.rubinEnemies:
@@ -317,6 +323,7 @@ class LevelController:
         self.drawCharacters()
         self.movingPresses()
         self.steamGasePipe()
+        self.laserBurn()
         self.scrollScene()
         self.ui.renderUI(self.player, self.screen)
 

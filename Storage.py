@@ -70,9 +70,11 @@ class Storage:
         self.gunIconFrames = [1, 1]
         self.lvl2CableSpritesheet = 'Images/Levels/LEVEL_2/FISIERE_VITAEX_LVL2/Cable/cable.png'
         self.lvl2CableSize = (102, 282)
-        self.lvl2LaserSpritesheet = 'Images/Levels/LEVEL_2/FISIERE_VITAEX_LVL2/Laser/laser.png'
-        self.lvl2LaserSize = (69, 282)
-        self.lvl2LaserAnimationFrames = [3, 10]
+        self.lvl2LaserSlabSpritesheet = 'Images/Levels/LEVEL_2/FISIERE_VITAEX_LVL2/Laser/laserSlabSpritesheet.png'
+        self.lvl2LaserSlabSize = (69, 19)
+        self.lvl2LaserTopSpritesheet = 'Images/Levels/LEVEL_2/FISIERE_VITAEX_LVL2/Laser/laserTopSpritesheet.png'
+        self.lvl2LaserTopSize = (69, 265)
+        self.lvl2LaserAnimationFrames = [3, 12]
         self.lvl2PipeSpritesheet = 'Images/Levels/LEVEL_2/FISIERE_VITAEX_LVL2/Pipe/pipe.png'
         self.lvl2PressUpSpriteSheet = 'Images/Levels/LEVEL_2/FISIERE_VITAEX_LVL2/Press/press_up.png'
         self.lvl2PressUpSize = (69, 272)

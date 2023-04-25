@@ -132,9 +132,13 @@ class Levels:
         self.resourceProvider.registerResource("pipe", self.storage.lvl2PipeSpritesheet, [1, 5],
                                                self.storage.lvl2PipeSize,
                                                None, None, None)
-        self.resourceProvider.registerResource("laser", self.storage.lvl2LaserSpritesheet,
+        self.resourceProvider.registerResource("laserTop", self.storage.lvl2LaserTopSpritesheet,
                                                self.storage.lvl2LaserAnimationFrames,
-                                               self.storage.lvl2LaserSize,
+                                               self.storage.lvl2LaserTopSize,
+                                               None, None, None)
+        self.resourceProvider.registerResource("laserSlab", self.storage.lvl2LaserSlabSpritesheet,
+                                               self.storage.lvl2LaserAnimationFrames,
+                                               self.storage.lvl2LaserSlabSize,
                                                None, None, None)
         self.resourceProvider.registerResource("cable", self.storage.lvl2CableSpritesheet, [6],
                                                self.storage.lvl2CableSize, None, None, None)
@@ -142,11 +146,11 @@ class Levels:
                                                self.storage.menuTextAnimationFrames,
                                                self.storage.menuTextSize, None, None, None)
         self.gatePos = []
-        self.cablePos = [700, 2100, 2400]
-        self.pressPos = [1500, 1650, 1800, 2750, 2900]
-        self.pressOffset = [0, 250, 50, 0, 300]
-        self.pipePos = [400, 1120, 3000]
-        self.laserPos = [200]
+        self.cablePos = [2300, 5200]
+        self.pressPos = [1700, 1850, 2000, 2950, 3100, 3550, 4500, 4650, 4800, 4950]
+        self.pressOffset = [0, 250, 50, 0, 300, 150, 0, 250, 50, 300]
+        self.pipePos = [1320, 2650, 3700]
+        self.laserPos = [3400, 4200]
         self.rubinEnemyPos = []
         self.guardiansPos = [1000]
 
