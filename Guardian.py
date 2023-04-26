@@ -12,6 +12,9 @@ class Guardian(Character):
         self.velocity = 6
         self.isShot = True
         self.isDead = False
+        self.isShooting = False
+        self.isLeft = True
+        self.isRight = False
 
     def shoot(self):
         if self.isShooting:
@@ -21,12 +24,14 @@ class Guardian(Character):
                 self.bulletReload = False
                 self.action = self.actions["idleArmed"]
 
-    def AI(self, player):
-        if abs(player.bounds.x - self.bounds.x) < 200:
+    def working(self, gate, objects, player):
+        self.gravity(objects)
+        if gate.isOpening and player.getCollisionBox().x < gate.gateWall.getCollisionBox().x and gate.dinamicGate.getCollisionBox().top > -20:
             self.isShooting = True
+
+        if self.isShooting:
             self.shoot()
         else:
             self.isShooting = False
             self.isIdle = True
             self.inIdle()
-

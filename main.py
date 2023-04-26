@@ -31,11 +31,10 @@ levelController = LevelController(screen, 1)
 nextLevel = False
 SCROLLING_SPEED = 4
 
-
 lastUpdate = pygame.time.get_ticks()
 
+restart = False
 ashes = False
-
 
 lvl = 1
 
@@ -51,6 +50,7 @@ def main():
     levelController.generatePipe()
     levelController.generateLaser()
     levelController.generateCable()
+    levelController.generateGate()
     levelController.updateActorsList()
     levelController.updateObjectsList()
     levelController.updateRigidBodies()
@@ -67,6 +67,7 @@ def main():
             levelController.generateCable()
             levelController.generatePipe()
             levelController.generateLaser()
+            levelController.generateGate()
             levelController.updateActorsList()
             levelController.updateObjectsList()
             levelController.updateRigidBodies()
@@ -80,7 +81,6 @@ def main():
             levelController.tickGame()
         else:
             gameOver()
-
         pygame.display.update()
 
     pygame.quit()
@@ -89,10 +89,16 @@ def main():
 def gameOver():
     global lastUpdate
     global ashes
+    global restart
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             levelController.running = False
+        if restart:
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_r:
+                    levelController.restartLevel = True
+
     currentTime = pygame.time.get_ticks()
     if currentTime - lastUpdate > levelController.player.animationCooldown:
         if not levelController.player.isDead:
@@ -109,7 +115,9 @@ def gameOver():
         ashes = True
     if ashes:
         levelController.player.frame = levelController.player.deathLastFrame
+        restart = True
     levelController.ui.renderUI(levelController.player, levelController.screen)
+
 
 
 if __name__ == '__main__':

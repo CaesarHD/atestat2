@@ -145,7 +145,13 @@ class Levels:
         self.resourceProvider.registerResource("pauseTextMenu", self.storage.menuTextSpritesheet,
                                                self.storage.menuTextAnimationFrames,
                                                self.storage.menuTextSize, None, None, None)
-        self.gatePos = []
+        self.resourceProvider.registerResource("staticGate", self.storage.staticGateSpritesheet, [1],
+                                               self.storage.gateSize, None, None, None)
+        self.resourceProvider.registerResource("dinamicGate", self.storage.dinamicGateSpritesheet, [1],
+                                               self.storage.gateSize, None, None, None)
+        self.resourceProvider.registerResource("gateWall", self.storage.gateWallSpritesheet, [1],
+                                               self.storage.gateSize, None, None, None)
+        self.gatePos = [500]
         self.cablePos = [2300, 5200]
         self.pressPos = [1700, 1850, 2000, 2950, 3100, 3550, 4500, 4650, 4800, 4950]
         self.pressOffset = [0, 250, 50, 0, 300, 150, 0, 250, 50, 300]

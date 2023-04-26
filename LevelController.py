@@ -4,6 +4,7 @@ from Actor import Actor
 from Background import Background
 from Cable import Cable
 from Enemy import Enemy
+from Gate import Gate
 from Ground import Ground
 from Guardian import Guardian
 from Laser import Laser
@@ -55,7 +56,6 @@ class LevelController:
         self.guardianPosition = self.level.guardiansPos
         self.guardians = []
         self.guardianEnemy = [self.player]
-        # self.guardianEnemy.append(self.player)
         self.pressXPos = self.level.pressPos
         self.pressYOffset = self.level.pressOffset
         self.presses = []
@@ -76,6 +76,10 @@ class LevelController:
         self.pipes = []
         self.lasers = []
         self.laserPos = self.level.laserPos
+        self.gates = []
+        self.gatePos = self.level.gatePos
+        self.restartLevel = False
+        self.isOver = False
 
     def levelZero(self):
         resourceProvider = self.level.loadResourcesLevel(0)
@@ -112,6 +116,10 @@ class LevelController:
         for laser in self.lasers:
             self.actors.append(laser.laserTop)
             self.actors.append(laser.laserSlab)
+        for gate in self.gates:
+            self.actors.append(gate.dinamicGate)
+            self.actors.append(gate.staticGate)
+            self.actors.append(gate.gateWall)
         for press in self.presses:
             self.actors.append(press.pressUp)
             self.actors.append(press.pressDown)
@@ -138,6 +146,10 @@ class LevelController:
             self.presses.append(Press(xPos, self.pressYOffset[index], self.resourceProvider))
             index += 1
 
+    def generateGate(self):
+        for pos in self.gatePos:
+            self.gates.append(Gate(pos, self.resourceProvider))
+
     def generateLaser(self):
         for posX in self.laserPos:
             self.lasers.append(Laser(posX, self.resourceProvider))
@@ -145,6 +157,8 @@ class LevelController:
     def updateRigidBodies(self):
         for press in self.presses:
             self.rigidBodies.append(press.pressUp)
+        for gate in self.gates:
+            self.rigidBodies.append(gate.dinamicGate)
 
     def generateCable(self):
         for pos in self.cablePos:
@@ -224,6 +238,7 @@ class LevelController:
             enemy.drawBullets(self.screen)
         for guardian in self.guardians:
             guardian.drawActor(self.screen)
+            guardian.drawBullets(self.screen)
         self.player.drawActor(self.screen)
         self.player.drawBullets(self.screen)
 
@@ -240,6 +255,8 @@ class LevelController:
         for laser in self.lasers:
             laser.drawActor(self.screen)
             laser.working()
+        for gate in self.gates:
+            gate.drawGate(self.screen)
         self.player.drawMine(self.screen)
 
     def movingPresses(self):
@@ -253,6 +270,10 @@ class LevelController:
     def laserBurn(self):
         for laser in self.lasers:
             laser.playerBurned(self.player)
+
+    def gateWorking(self):
+        for gate in self.gates:
+            gate.working(self.player)
 
     def enemyAlgorithm(self):
         for enemy in self.rubinEnemies:
@@ -282,15 +303,8 @@ class LevelController:
 
     def guardianAlgorithm(self):
         for guardian in self.guardians:
-            guardian.gravity(self.objects)
-            guardian.isLeft = True
-            guardian.isRight = False
+            guardian.working(self.gates[0], self.objects, self.player)
             guardian.updateBullet(self.guardianBulletTarget, self.guardianEnemy, self.screen)
-            if guardian.isCloseTo(self.player, 200):
-                guardian.isShooting = True
-            else:
-                guardian.isShooting = False
-            guardian.inIdle()
 
     def tickGame(self):
         for event in pygame.event.get():
@@ -322,6 +336,7 @@ class LevelController:
         self.drawObjects()
         self.drawCharacters()
         self.movingPresses()
+        self.gateWorking()
         self.steamGasePipe()
         self.laserBurn()
         self.scrollScene()
@@ -329,7 +344,13 @@ class LevelController:
 
     def nextLevel(self):
         if self.player.bounds.x >= (SCREEN_WIDTH - self.player.bounds.size[1]) - 2:
+            self.restartLevel = False
             return True
+        if self.restartLevel:
+            self.restartLevel = False
+            self.lvl -= 1
+            return True
+
         return False
 
     def levelUp(self):

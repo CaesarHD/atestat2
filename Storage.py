@@ -82,6 +82,10 @@ class Storage:
         self.lvl2PressDownSize = (69, 10)
         self.lvl2PipeSize = (108, 282)
         self.lvl2GroundSize = (569, 38)
+        self.gateSize = (51, 282)
+        self.staticGateSpritesheet = 'Images/Levels/LEVEL_2/FISIERE_VITAEX_LVL2/Door/DOOR1.png'
+        self.dinamicGateSpritesheet = 'Images/Levels/LEVEL_2/FISIERE_VITAEX_LVL2/Door/DOOR2.png'
+        self.gateWallSpritesheet = 'Images/Levels/LEVEL_2/FISIERE_VITAEX_LVL2/Door/DOOR3.png'
         self.lvl2StaticBackgroundSpritesheet = 'Images/Levels/LEVEL_2/FISIERE_VITAEX_LVL2/Background/staticBackground.png'
         self.lvl2StaticBackgroundSize = (569, 320)
         self.lvl2DinamicBackgroundSpritesheet = 'Images/Levels/LEVEL_2/FISIERE_VITAEX_LVL2/Background/spritesheet (22).png'
