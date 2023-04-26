@@ -151,21 +151,20 @@ class Levels:
                                                self.storage.gateSize, None, None, None)
         self.resourceProvider.registerResource("gateWall", self.storage.gateWallSpritesheet, [1],
                                                self.storage.gateSize, None, None, None)
-        self.gatePos = [500]
-        self.cablePos = [2300, 5200]
-        self.pressPos = [1700, 1850, 2000, 2950, 3100, 3550, 4500, 4650, 4800, 4950]
+        self.cablePos = [4200, 5900, 6200]
+        self.pressPos = [3000, 3150, 3300, 7000, 7150, 7300, 9500, 9650, 9800, 9950]
         self.pressOffset = [0, 250, 50, 0, 300, 150, 0, 250, 50, 300]
-        self.pipePos = [1320, 2650, 3700]
-        self.laserPos = [3400, 4200]
-        self.rubinEnemyPos = []
-        self.guardiansPos = [1000]
+        self.pipePos = [2400, 3700, 6500]
+        self.laserPos = [5000, 8000]
+        self.gatePos = [1500]
+        self.guardiansPos = [1650]
 
     def loadResourcesLevel(self, level):
         match level:
             case 0:
                 self.loadResourcesLevel0()
             case 1:
-                self.loadResourcesLevel2()
+                self.loadResourcesLevel1()
             case 2:
                 self.loadResourcesLevel2()
         return self.resourceProvider
