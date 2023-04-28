@@ -152,8 +152,8 @@ class Levels:
         self.resourceProvider.registerResource("gateWall", self.storage.gateWallSpritesheet, [1],
                                                self.storage.gateSize, None, None, None)
         self.cablePos = [4200, 5900, 6200]
-        self.pressPos = [3000, 3150, 3300, 7000, 7150, 7300, 9500, 9650, 9800, 9950]
-        self.pressOffset = [0, 250, 50, 0, 300, 150, 0, 250, 50, 300]
+        self.pressPos = [3000, 3150, 3300, 7000, 7150, 7300, 9500, 9650, 9800, 9950, 11000, 11150, 11300, 11450]
+        self.pressOffset = [0, 250, 50, 0, 300, 150, 0, 250, 50, 300, 0, 50, 100, 150]
         self.pipePos = [2400, 3700, 6500]
         self.laserPos = [5000, 8000]
         self.gatePos = [1500]
@@ -164,7 +164,7 @@ class Levels:
             case 0:
                 self.loadResourcesLevel0()
             case 1:
-                self.loadResourcesLevel1()
+                self.loadResourcesLevel2()
             case 2:
                 self.loadResourcesLevel2()
         return self.resourceProvider

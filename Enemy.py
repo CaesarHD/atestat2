@@ -22,7 +22,7 @@ class Enemy(Character):
         self.velocity = 6
         self.isShot = False
         self.isDead = False
-        self.bulletsReceived = 3
+        self.bulletsReceived = 4
         self.idleShootTiming = 500
         self.movingShootTiming = 0
         self.lastUpdate = 0

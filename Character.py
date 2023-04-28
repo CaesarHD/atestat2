@@ -77,9 +77,7 @@ class Character(Actor):
         if self.isJumping and not self.isFalling and not self.useAbility:
             self.onObject = False
             self.isIdle = False
-            # if self.isPreJumping:
-            #     self.preJump()
-            # else:
+
             if self.isArmed:
                 if self.isShooting:
                     self.shoot()
@@ -88,15 +86,11 @@ class Character(Actor):
             else:
                 self.changeAction("jump")
 
-            # TODO: calculate this based on JUMP_HEIGHT
-            self.gravityForce -= 0.3
+            self.gravityForce -= 0.4
             if self.gravityForce <= 0.1:
-                self.gravityForce = 0.1
+                self.isJumping = False
             if not self.isBlocked:
                 self.moveUp()
-            currentPos = self.bounds.topleft[1]
-            if self.preJumpPosition - currentPos > JUMP_HEIGHT or self.isBlocked:
-                self.isJumping = False
 
     def preJump(self):
         if self.isPreJumping:
