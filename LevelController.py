@@ -43,7 +43,7 @@ class LevelController:
         self.enemyPositions = self.level.rubinEnemyPos
         self.staticBackground = Background((0, 0), 2, self.resourceProvider.getResource("staticBackground"))
         self.dinamicBackgorund = Background((0, 0), 2, self.resourceProvider.getResource("dinamicBackground"))
-        self.ground = Ground((0, 0), 2, self.resourceProvider.getResource("ground"))
+        self.ground = Ground((-10, 0), 2, self.resourceProvider.getResource("ground"))
         self.mines = self.player.mines
         self.explosions = []
         self.explosionPos = 0
@@ -80,6 +80,8 @@ class LevelController:
         self.gatePos = self.level.gatePos
         self.restartLevel = False
         self.isOver = False
+        self.restart = None
+        self.ashes = False
 
     def levelZero(self):
         resourceProvider = self.level.loadResourcesLevel(0)
@@ -372,3 +374,39 @@ class LevelController:
         if currentTime - lastUpdate > self.player.animationCooldown:
             self.menuText.tickAnimation()
             lastUpdate = currentTime
+
+    def gameOver(self):
+        global lastUpdate
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                self.running = False
+            if self.restart:
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_r:
+                        self.restartLevel = True
+
+        # currentTime = pygame.time.get_ticks()
+        # if currentTime - lastUpdate > self.player.animationCooldown:
+        #     self.updateActorsAnimation()
+        #     self.ui.renderUI(self.player, self.screen)
+        #     lastUpdate = currentTime
+        self.player.die()
+        self.player.drawActor(self.screen)
+        self.characterAI()
+        self.steamGasePipe()
+        self.drawObjects()
+        self.drawCharacters()
+        self.movingPresses()
+        self.updateActorsAnimation()
+        self.player.updateBullet(self.actors, self.playerOpponents, self.screen)
+        for guardian in self.guardians:
+            guardian.updateBullet(self.actors, self.guardianEnemy, self.screen)
+        for enemy in self.rubinEnemies:
+            enemy.updateBullet(self.actors, self.enemyOpponents, self.screen)
+
+        if self.player.frame == self.player.deathLastFrame and not self.ashes:
+            self.ashes = True
+        if self.ashes:
+            self.player.frame = self.player.deathLastFrame
+            self.restart = True
+        self.ui.renderUI(self.player, self.screen)

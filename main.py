@@ -80,44 +80,10 @@ def main():
         if not levelController.player.isShot:
             levelController.tickGame()
         else:
-            gameOver()
+            levelController.gameOver()
         pygame.display.update()
 
     pygame.quit()
-
-
-def gameOver():
-    global lastUpdate
-    global ashes
-    global restart
-
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            levelController.running = False
-        if restart:
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_r:
-                    levelController.restartLevel = True
-
-    currentTime = pygame.time.get_ticks()
-    if currentTime - lastUpdate > levelController.player.animationCooldown:
-        if not levelController.player.isDead:
-            levelController.updateActorsAnimation()
-            levelController.ui.renderUI(levelController.player, levelController.screen)
-        lastUpdate = currentTime
-    levelController.player.die()
-    levelController.player.drawActor(screen)
-    levelController.drawObjects()
-    levelController.drawCharacters()
-    levelController.movingPresses()
-    levelController.updateActorsAnimation()
-    if levelController.player.frame == levelController.player.deathLastFrame and not ashes:
-        ashes = True
-    if ashes:
-        levelController.player.frame = levelController.player.deathLastFrame
-        restart = True
-    levelController.ui.renderUI(levelController.player, levelController.screen)
-
 
 
 if __name__ == '__main__':
