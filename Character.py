@@ -91,7 +91,7 @@ class Character(Actor):
 
             self.gravityForce -= self.gravityDrop
             self.gravityDrop *= 1.03
-            if self.gravityForce <= 0.1:
+            if self.gravityForce <= 0:
                 self.gravityDrop = 0.3
                 self.isJumping = False
             if not self.isBlocked:
