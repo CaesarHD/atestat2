@@ -11,7 +11,6 @@ RIGHT_SCROLL_BOUNDARY = 600
 LEFT_SCROLL_BOUNDARY = 400
 
 GROUND = 420
-JUMP_HEIGHT = 150
 GFORCE = 10
 RIGHT_MAP_BORDER = 1138 * 5
 LEFT_MAP_BORDER = 15
@@ -52,6 +51,7 @@ class Character(Actor):
         self.onObject = False
         self.currentObject = None
         self.isBlocked = False
+        self.gravityDrop = 0.3
 
     def changeAction(self, action):
         if not self.action == self.actions[action]:
@@ -86,8 +86,10 @@ class Character(Actor):
             else:
                 self.changeAction("jump")
 
-            self.gravityForce -= 0.4
+            self.gravityForce -= self.gravityDrop
+            self.gravityDrop *= 1.03
             if self.gravityForce <= 0.1:
+                self.gravityDrop = 0.3
                 self.isJumping = False
             if not self.isBlocked:
                 self.moveUp()
