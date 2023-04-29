@@ -14,12 +14,12 @@ class LevelZero:
         self.vitaexLogo = Actor((0, 0), 2, self.resourceProvider.getResource("vitaexLogo"), None)
         self.pressKey = Actor((0, 0), 2, self.resourceProvider.getResource("pressKey"), None)
         self.voyager = Actor((4500, -1550), 2, self.resourceProvider.getResource("voyager"), None)
-        self.asteroid = Actor((-2000, 400), 0.5, self.resourceProvider.getResource("asteroid"), None)
+        self.asteroid = Actor((-200, 400), 0.5, self.resourceProvider.getResource("asteroid"), None)
 
         self.opacity = 255
         self.pressKey.spritesheet.sheet = pygame.transform.scale2x(self.pressKey.spritesheet.sheet)
         self.pressKeyAnimationCooldown = 50
-        self.voyagerAnimationCooldown = 50000
+        self.voyagerAnimationCooldown = 200
         self.increase = False
         self.decrease = True
         self.startVoyager = False
@@ -60,14 +60,14 @@ class LevelZero:
                 self.startVoyager = True
                 voyagerLastUpdate = currentTime
         if self.startVoyager:
-            if self.voyager.getCollisionBox().y < 9000:
+            if self.voyager.getCollisionBox().y < 2000:
                 self.voyager.moveDown(1)
                 self.voyager.moveLeft(1.5)
             else:
                 self.voyager.bounds.topleft = (2500, -600)
 
     def moveAsteroid(self):
-        if self.asteroid.bounds.x < 5000:
+        if self.asteroid.bounds.x < 3000:
             self.asteroid.moveRight(1)
         else:
             self.asteroid.bounds.topleft = (-2000, 400)

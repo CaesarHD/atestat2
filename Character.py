@@ -77,7 +77,7 @@ class Character(Actor):
         # self.isLanding = True
 
     def jump(self):
-        if self.isJumping and not self.isFalling and not self.useAbility and not self.isShooting:
+        if self.isJumping and not self.isFalling and not self.useAbility and not self.isShot:
             self.onObject = False
             self.isIdle = False
 
