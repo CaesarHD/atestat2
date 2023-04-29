@@ -402,6 +402,8 @@ class LevelController:
         self.steamGasePipe()
         self.drawObjects()
         self.drawCharacters()
+        self.mineExplosion()
+        self.drawExplosion()
         self.movingPresses()
         self.updateActorsAnimation()
         self.player.updateBullet(self.actors, self.playerOpponents, self.screen)
