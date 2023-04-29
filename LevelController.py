@@ -15,7 +15,6 @@ from Player import Player
 from Press import Press
 from UI import UI
 
-
 RUBIN_ENEMY_BULLET_SIZE = 3.5
 RUBIN_ENEMY_BULLET_SPAWN_LOCATION = 30
 RUBIN_ENEMY_SIZE = 2
@@ -38,7 +37,7 @@ class LevelController:
         self.level = Levels()
         self.lvl = lvl
         self.resourceProvider = self.level.loadResourcesLevel(self.lvl)
-        self.player = Player((0, 100), 2, self.resourceProvider.getResource("player"), 5, 42, (35, 0))
+        self.player = Player((0, 100), 2, self.resourceProvider.getResource("player"), 5, 42, 1, (35, 0))
         self.rubinEnemies = []
         self.enemyPositions = self.level.rubinEnemyPos
         self.staticBackground = Background((0, 0), 2, self.resourceProvider.getResource("staticBackground"))
@@ -103,6 +102,7 @@ class LevelController:
                       self.resourceProvider.getResource("rubinEnemy"),
                       RUBIN_ENEMY_BULLET_SIZE,
                       RUBIN_ENEMY_BULLET_SPAWN_LOCATION,
+                      1,
                       (50, 0)))
 
     def updateActorsList(self):
@@ -140,6 +140,7 @@ class LevelController:
                          self.resourceProvider.getResource("guardian"),
                          5,
                          42,
+                         10,
                          (50, 0)))
 
     def generatePress(self):
@@ -359,21 +360,30 @@ class LevelController:
         self.lvl += 1
         return self.lvl
 
+    def addMask(self, alpha):
+        img = pygame.Surface((800 * 1.42, 480 * 1.33))
+        img.set_alpha(alpha)
+        img.fill((0, 0, 0))
+        self.screen.blit(img, (0, 0))
+
     def menu(self):
         global lastUpdate
         self.drawObjects()
         self.drawCharacters()
         self.ui.drawUI(self.screen)
-        img = pygame.Surface((800 * 1.42, 480 * 1.33))
-        img.set_alpha(150)
-        img.fill((0, 0, 0))
-        self.screen.blit(img, (0, 0))
+        self.addMask(150)
         self.menuText.drawActor(self.screen)
 
         currentTime = pygame.time.get_ticks()
         if currentTime - lastUpdate > self.player.animationCooldown:
             self.menuText.tickAnimation()
             lastUpdate = currentTime
+
+    def drawBullets(self):
+        for guardian in self.guardians:
+            guardian.updateBullet(self.actors, self.guardianEnemy, self.screen)
+        for enemy in self.rubinEnemies:
+            enemy.updateBullet(self.actors, self.enemyOpponents, self.screen)
 
     def gameOver(self):
         global lastUpdate
@@ -385,28 +395,21 @@ class LevelController:
                     if event.key == pygame.K_r:
                         self.restartLevel = True
 
-        # currentTime = pygame.time.get_ticks()
-        # if currentTime - lastUpdate > self.player.animationCooldown:
-        #     self.updateActorsAnimation()
-        #     self.ui.renderUI(self.player, self.screen)
-        #     lastUpdate = currentTime
         self.player.die()
         self.player.drawActor(self.screen)
-        self.characterAI()
+        self.enemyAlgorithm()
+        self.guardianAlgorithm()
         self.steamGasePipe()
         self.drawObjects()
         self.drawCharacters()
         self.movingPresses()
         self.updateActorsAnimation()
         self.player.updateBullet(self.actors, self.playerOpponents, self.screen)
-        for guardian in self.guardians:
-            guardian.updateBullet(self.actors, self.guardianEnemy, self.screen)
-        for enemy in self.rubinEnemies:
-            enemy.updateBullet(self.actors, self.enemyOpponents, self.screen)
-
+        self.drawBullets()
+        self.ui.renderUI(self.player, self.screen)
         if self.player.frame == self.player.deathLastFrame and not self.ashes:
             self.ashes = True
         if self.ashes:
+            self.addMask(100)
             self.player.frame = self.player.deathLastFrame
             self.restart = True
-        self.ui.renderUI(self.player, self.screen)

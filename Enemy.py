@@ -12,8 +12,8 @@ PLAYER_DISTANCE = 1200
 lastUpdate = 0
 
 class Enemy(Character):
-    def __init__(self, pos, scale, resource, bulletSize, bulletSpawnLocation, collisionOffset):
-        super().__init__(pos, scale, resource, bulletSize, bulletSpawnLocation, collisionOffset)
+    def __init__(self, pos, scale, resource, bulletSize, bulletSpawnLocation, bulletDamage, collisionOffset):
+        super().__init__(pos, scale, resource, bulletSize, bulletSpawnLocation, bulletDamage, collisionOffset)
         self.isShooting = False
         self.isJumping = False
         self.isArmed = True

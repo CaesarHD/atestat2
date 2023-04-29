@@ -3,7 +3,7 @@ import pygame
 
 
 class Bullet(Actor):
-    def __init__(self, pos, scale, resource, isRight):
+    def __init__(self, pos, scale, resource, isRight, damage):
         super().__init__(pos, scale, resource, None)
         self.isRight = isRight
         self.out = False
@@ -12,6 +12,7 @@ class Bullet(Actor):
             self.bounds.x += 30
         else:
             self.bounds.x -= 50
+        self.damage = damage
 
     def collideWithObjects(self, objects, characters, screen):
         return self.collideWithActors(objects) or self.collideWithActors(characters) or self.collideWithScreen(screen)
@@ -21,7 +22,7 @@ class Bullet(Actor):
             if (abs(self.bounds.x - character.bounds.x) < 60 and
                 (self.bounds.top >= character.bounds.top)) and \
                     (self.bounds.bottom <= character.bounds.bottom):
-                character.bulletsReceived = character.bulletsReceived - 1
+                character.bulletsReceived = character.bulletsReceived - self.damage
             if character.bulletsReceived == 0:
                 character.isShot = True
 

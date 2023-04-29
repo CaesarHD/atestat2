@@ -5,8 +5,8 @@ SCROLLING_SPEED = 4
 
 
 class Player(Character):
-    def __init__(self, pos, scale, resource, bulletSize, bulletSpawnLocation, collisionOffset):
-        super().__init__(pos, scale, resource, bulletSize, bulletSpawnLocation, collisionOffset)
+    def __init__(self, pos, scale, resource, bulletSize, bulletSpawnLocation, bulletDamage, collisionOffset):
+        super().__init__(pos, scale, resource, bulletSize, bulletSpawnLocation, bulletDamage, collisionOffset)
         self.scrollingSpeed = SCROLLING_SPEED
         self.scroll = 0
 

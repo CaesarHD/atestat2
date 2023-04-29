@@ -2,8 +2,8 @@ from Character import Character
 
 
 class Guardian(Character):
-    def __init__(self, pos, scale, resource, bulletSize, bulletSpawnLocation, collisionOffset):
-        super().__init__(pos, scale, resource, bulletSize, bulletSpawnLocation, collisionOffset)
+    def __init__(self, pos, scale, resource, bulletSize, bulletSpawnLocation, bulletDamage, collisionOffset):
+        super().__init__(pos, scale, resource, bulletSize, bulletSpawnLocation, bulletDamage, collisionOffset)
         self.isShooting = True
         self.isJumping = False
         self.isArmed = True

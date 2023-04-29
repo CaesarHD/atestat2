@@ -19,7 +19,7 @@ PLAYER_OFFSET = 4
 
 
 class Character(Actor):
-    def __init__(self, pos, scale, resource, bulletSize, bulletSpawnLocation, collisionOffset):
+    def __init__(self, pos, scale, resource, bulletSize, bulletSpawnLocation, bulletDamage, collisionOffset):
         super().__init__(pos, scale, resource, collisionOffset)
         self.preJumpPosition = GROUND
         self.isShooting = False
@@ -52,6 +52,9 @@ class Character(Actor):
         self.currentObject = None
         self.isBlocked = False
         self.gravityDrop = 0.3
+        self.bulletDamage = bulletDamage
+        self.isBlockedRight = False
+        self.isBlockedLeft = False
 
     def changeAction(self, action):
         if not self.action == self.actions[action]:
@@ -74,7 +77,7 @@ class Character(Actor):
         # self.isLanding = True
 
     def jump(self):
-        if self.isJumping and not self.isFalling and not self.useAbility:
+        if self.isJumping and not self.isFalling and not self.useAbility and not self.isShooting:
             self.onObject = False
             self.isIdle = False
 
@@ -93,6 +96,8 @@ class Character(Actor):
                 self.isJumping = False
             if not self.isBlocked:
                 self.moveUp()
+            else:
+                self.isJumping = False
 
     def preJump(self):
         if self.isPreJumping:
@@ -145,7 +150,7 @@ class Character(Actor):
                     self.changeAction("walkArmed")
             if self.isShooting:
                 self.shoot()
-            if not self.walkInPlaceLeft and not self.getCollisionBox().x <= LEFT_MAP_BORDER and not self.isBlocked:
+            if not self.walkInPlaceLeft and not self.getCollisionBox().x <= LEFT_MAP_BORDER and not self.isBlockedLeft:
                 initial = self.bounds.topleft
                 self.bounds.topleft = (initial[0] - self.velocity, initial[1])
 
@@ -161,7 +166,7 @@ class Character(Actor):
                     self.changeAction("walkArmed")
             if self.isShooting:
                 self.shoot()
-            if not self.walkInPlaceRight and not self.bounds.x >= (SCREEN_WIDTH - self.bounds.size[1]) and not self.isBlocked:
+            if not self.walkInPlaceRight and not self.bounds.x >= (SCREEN_WIDTH - self.bounds.size[1]) and not self.isBlockedRight:
                 initial = self.bounds.topleft
                 self.bounds.topleft = (initial[0] + self.velocity, initial[1])
 
@@ -220,10 +225,21 @@ class Character(Actor):
 
     def collideWithRigidBody(self, rigidBodies):
         self.isBlocked = False
+        self.isBlockedLeft = False
+        self.isBlockedRight = False
         for body in rigidBodies:
             if self.isCollideWith(body):
                 self.isBlocked = True
-
+                if self.getCollisionBox().topright[0] + self.velocity >= body.getCollisionBox().topleft[0]:
+                    self.isBlockedRight = True
+                if self.getCollisionBox().topleft[0] - self.velocity <= body.getCollisionBox().topright[0]:
+                    self.isBlockedLeft = True
+                if self.getCollisionBox().topright[0] > body.getCollisionBox().topright[0]:
+                    self.isBlockedRight = False
+                if self.getCollisionBox().topleft[0] < body.getCollisionBox().topleft[0]:
+                    self.isBlockedLeft = False
+                print(self.isBlockedRight)
+                print(self.isBlockedLeft)
 
     def toggleWeapon(self):
         self.isArmed = not self.isArmed
@@ -260,7 +276,7 @@ class Character(Actor):
         if self.isShooting and not self.bulletReload:
             self.bullets.append(
                 Bullet((self.bounds.x, self.bounds.y + self.bulletSpawnLocation), self.bulletSize, self.bullet,
-                       self.isRight))
+                       self.isRight, self.bulletDamage))
             self.bulletReload = True
         for bullet in self.bullets:
             if not bullet.out:
