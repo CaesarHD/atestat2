@@ -238,8 +238,6 @@ class Character(Actor):
                     self.isBlockedRight = False
                 if self.getCollisionBox().topleft[0] < body.getCollisionBox().topleft[0]:
                     self.isBlockedLeft = False
-                print(self.isBlockedRight)
-                print(self.isBlockedLeft)
 
     def toggleWeapon(self):
         self.isArmed = not self.isArmed
