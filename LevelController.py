@@ -157,6 +157,10 @@ class LevelController:
         for posX in self.laserPos:
             self.lasers.append(Laser(posX, self.resourceProvider))
 
+    def level3(self):
+        level3Img = Actor((0, 0), 2, self.resourceProvider.getResource("toBeContinuedText"), None)
+        level3Img.drawActor(self.screen)
+
     def updateRigidBodies(self):
         for press in self.presses:
             self.rigidBodies.append(press.pressUp)
@@ -330,6 +334,10 @@ class LevelController:
 
         if self.isLevelZero:
             self.lvlZero.drawLevel(self.screen)
+            return
+
+        if self.lvl == 3:
+            self.level3()
             return
 
         self.updateActorsAnimation()

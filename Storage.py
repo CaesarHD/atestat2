@@ -95,6 +95,8 @@ class Storage:
         self.menuTextSpritesheet = 'Images/Levels/Menu/spritesheet (24).png'
         self.menuTextAnimationFrames = [7]
         self.menuTextSize = (107, 31)
+        self.toBeContinuedSpritesheet = 'Images/Levels/LEVEL_3/Untitled21312312.png'
+        self.toBeContinuedSize = (569, 320)
 
     def getResource(self):
         return self.resourceProvider
