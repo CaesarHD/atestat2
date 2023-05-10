@@ -24,6 +24,8 @@ class Levels:
         self.laserPos = []
         self.pipePos = []
         self.cablePos = []
+        self.antennaPos = []
+        self.controlPanelPos = []
 
     def loadResourcesLevel0(self):
         self.resourceProvider.registerResource("staticBackground", self.storage.lvl0BackgroundSpritesheet, [1],
@@ -38,6 +40,10 @@ class Levels:
                                                self.storage.asteroidSize, None, None, None)
 
     def loadResourcesLevel1(self):
+        self.resourceProvider.registerResource("antenna", self.storage.lvl1AntennaSpritesheet, [1],
+                                               self.storage.lvl1AntennaSize, None, None, None)
+        self.resourceProvider.registerResource("controlPanel", self.storage.lvl1ControlsPanelSpritesheet, self.storage.lvl1ControlsPanelFrame,
+                                               self.storage.lvl1ControlsPanelSize, None, None, None)
         self.resourceProvider.registerResource("rubinEnemy", self.storage.rubinEnemySpriteSheet,
                                                self.storage.rubinEnemyAnimationFrames, self.storage.rubinEnemyFrameSize,
                                                self.action.getActions("rubinEnemy"),
@@ -84,8 +90,11 @@ class Levels:
         self.gatePos = []
         self.pressPos = []
         self.guardiansPos = []
+        self.antennaPos = [10]
 
     def loadResourcesLevel2(self):
+        self.resourceProvider.registerResource("antenna", self.storage.lvl1AntennaSpritesheet, [1],
+                                               self.storage.lvl1AntennaSize, None, None, None)
         self.resourceProvider.registerResource("rubinEnemy", self.storage.rubinEnemySpriteSheet,
                                                self.storage.rubinEnemyAnimationFrames, self.storage.rubinEnemyFrameSize,
                                                self.action.getActions("rubinEnemy"),
@@ -160,6 +169,8 @@ class Levels:
         self.guardiansPos = [1650]
 
     def loadResourcesLevel3(self):
+        self.resourceProvider.registerResource("antenna", self.storage.lvl1AntennaSpritesheet, [1],
+                                               self.storage.lvl1AntennaSize, None, None, None)
 
         self.resourceProvider.registerResource("rubinEnemy", self.storage.rubinEnemySpriteSheet,
                                                self.storage.rubinEnemyAnimationFrames, self.storage.rubinEnemyFrameSize,

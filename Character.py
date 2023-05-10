@@ -28,7 +28,6 @@ class Character(Actor):
         self.isPreJumping = False
         self.isLanding = False
         self.velocity = 8
-        self.actions = resource.actions
         self.walkInPlaceRight = False
         self.walkInPlaceLeft = False
         self.bulletReload = False

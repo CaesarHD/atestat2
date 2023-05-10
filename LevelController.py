@@ -3,6 +3,7 @@ import pygame
 from Actor import Actor
 from Background import Background
 from Cable import Cable
+from ControlPanel import ControlPanel
 from Enemy import Enemy
 from Gate import Gate
 from Ground import Ground
@@ -81,7 +82,9 @@ class LevelController:
         self.isOver = False
         self.restart = None
         self.ashes = False
-
+        self.antenaPos = self.level.antennaPos
+        self.antennas = []
+        self.controlPanels = []
     def levelZero(self):
         resourceProvider = self.level.loadResourcesLevel(0)
         staticBackground = Background((0, 0), 2, resourceProvider.getResource("staticBackground"))
@@ -105,6 +108,14 @@ class LevelController:
                       1,
                       (50, 0)))
 
+    def generateAntenna(self):
+        for pos in self.antenaPos:
+            self.antennas.append(Actor((pos, 350), 2, self.resourceProvider.getResource("antenna"), None))
+
+    def generateControlPanel(self):
+        for pos in self.antenaPos:
+            self.controlPanels.append(ControlPanel((pos + 62, 10), 2, self.resourceProvider.getResource("controlPanel"), None))
+
     def updateActorsList(self):
         for enemy in self.rubinEnemies:
             self.actors.append(enemy)
@@ -125,6 +136,11 @@ class LevelController:
         for press in self.presses:
             self.actors.append(press.pressUp)
             self.actors.append(press.pressDown)
+        for antenna in self.antennas:
+            self.actors.append(antenna)
+        for controlPanel in self.controlPanels:
+            self.actors.append(controlPanel)
+
 
     def updateObjectsList(self):
         for press in self.presses:
@@ -246,8 +262,6 @@ class LevelController:
         for guardian in self.guardians:
             guardian.drawActor(self.screen)
             guardian.drawBullets(self.screen)
-        self.player.drawActor(self.screen)
-        self.player.drawBullets(self.screen)
 
     def drawObjects(self):
         for press in self.presses:
@@ -264,6 +278,8 @@ class LevelController:
             laser.working()
         for gate in self.gates:
             gate.drawGate(self.screen)
+        for antenna in self.antennas:
+            antenna.drawActor(self.screen)
         self.player.drawMine(self.screen)
 
     def movingPresses(self):
@@ -347,11 +363,25 @@ class LevelController:
         self.drawObjects()
         self.drawCharacters()
         self.movingPresses()
+        self.controlPanelWorking()
         self.gateWorking()
         self.steamGasePipe()
         self.laserBurn()
         self.scrollScene()
         self.ui.renderUI(self.player, self.screen)
+        self.drawControlPanel()
+        self.drawPlayer()
+
+    def drawPlayer(self):
+        self.player.drawActor(self.screen)
+        self.player.drawBullets(self.screen)
+
+    def drawControlPanel(self):
+        for controlPanel in self.controlPanels:
+            controlPanel.drawActor(self.screen)
+    def controlPanelWorking(self):
+        for controlPanel in self.controlPanels:
+            controlPanel.working(self.player)
 
     def nextLevel(self):
         if self.player.bounds.x >= (SCREEN_WIDTH - self.player.bounds.size[1]) - 2:

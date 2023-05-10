@@ -97,6 +97,11 @@ class Storage:
         self.menuTextSize = (107, 31)
         self.toBeContinuedSpritesheet = 'Images/Levels/LEVEL_3/Untitled21312312.png'
         self.toBeContinuedSize = (569, 320)
+        self.lvl1AntennaSpritesheet = 'Images/Levels/LEVEL_1/ANTENNA.png'
+        self.lvl1AntennaSize = (61, 106)
+        self.lvl1ControlsPanelSpritesheet = 'Images/Levels/LEVEL_1/Spritesheet_Controale.png'
+        self.lvl1ControlsPanelSize = (328, 224)
+        self.lvl1ControlsPanelFrame = [5, 1, 6]
 
     def getResource(self):
         return self.resourceProvider

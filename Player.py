@@ -14,7 +14,7 @@ class Player(Character):
         key = pygame.key.get_pressed()
         if key[pygame.K_SPACE]:
             self.toggleShooting()
-        if key[pygame.K_a]:
+        if key[pygame.K_a] or key[pygame.K_LEFT]:
             self.walkInPlaceRight = False
             if self.toggleScrollBackgroundLeft():
                 if not self.isBlocked:
@@ -24,7 +24,7 @@ class Player(Character):
             else:
                 self.walkInPlaceLeft = False
             self.moveLeft()
-        elif key[pygame.K_d]:
+        elif key[pygame.K_d] or key[pygame.K_RIGHT]:
             self.walkInPlaceLeft = False
             if self.toggleScrollBackgroundRight():
                 if not self.isBlocked:
@@ -43,6 +43,8 @@ class Player(Character):
                 case pygame.K_q:
                     self.toggleWeapon()
                 case pygame.K_w:
+                    self.toggleJump()
+                case pygame.K_UP:
                     self.toggleJump()
                 case pygame.K_e:
                     self.toggleAbility()

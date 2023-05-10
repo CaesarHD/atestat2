@@ -27,6 +27,7 @@ class Actor:
         self.animationListFlip = 0
         self.animationSteps = resource.animationFrames
         self.action = 0
+        self.actions = resource.actions
         self.animationCooldown = 90
         self.frame = 0
         self.stepCounter = 0
@@ -48,6 +49,12 @@ class Actor:
     def resetAnimation(self):
         if self.frame >= len(self.animationList[self.action]):
             self.frame = 0
+
+    def changeAction(self, action):
+        if not self.action == self.actions[action]:
+            self.actionChanged = True
+            self.frame = 0
+            self.action = self.actions[action]
 
     def drawActor(self, screen):
         self.resetAnimation()
